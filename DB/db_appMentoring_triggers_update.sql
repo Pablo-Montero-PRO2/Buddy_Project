@@ -28,9 +28,9 @@ CREATE TABLE `actividad` (
   `id_actividad` int NOT NULL,
   `Profesor_usuario_id_usuario` int NOT NULL,
   `fecha_publicacion` timestamp NOT NULL,
-  `tipo_act` enum('Mentoring','Emprendimiento','Competencias Digitales') NOT NULL,
+  `tipo_act` varchar(50) NOT NULL,
   `desc_act` varchar(500) NOT NULL,
-  `est_act_prof` tinyint NOT NULL,
+  `est_act_prof` varchar(50) NOT NULL,
   `fecha_insercion` timestamp NOT NULL,
   `fecha_modificacion` timestamp NOT NULL,
   `fecha_borrado` timestamp NULL DEFAULT NULL,
@@ -70,7 +70,7 @@ CREATE TABLE `alumno_has_actividad` (
   `Alumno_usuario_id_usuario` int NOT NULL,
   `actividad_id_actividad` int NOT NULL,
   `actividad_Profesor_usuario_id_usuario` int NOT NULL,
-  `est_act_alu` varchar(45) NOT NULL,
+  `est_act_alu` varchar(50) NOT NULL,
   `fecha_insercion` timestamp NOT NULL,
   `fecha_modificacion` timestamp NOT NULL,
   `fecha_borrado` timestamp NULL DEFAULT NULL,
@@ -92,7 +92,7 @@ DROP TABLE IF EXISTS `ciclo`;
 CREATE TABLE `ciclo` (
   `id_ciclo` int NOT NULL AUTO_INCREMENT,
   `nom_ciclo` varchar(45) NOT NULL,
-  `grado_ciclo` enum('Medio','Superior') NOT NULL,
+  `grado_ciclo` varchar(45) NOT NULL,
   `fecha_insercion` timestamp NOT NULL,
   `fecha_modificacion` timestamp NOT NULL,
   `fecha_borrado` timestamp NULL DEFAULT NULL,
@@ -109,10 +109,10 @@ DROP TABLE IF EXISTS `grupo`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `grupo` (
-  `id_grupo` int NOT NULL,
+  `id_grupo` int NOT NULL AUTO_INCREMENT,
   `ciclo_id_ciclo1` int NOT NULL,
   `nom_grupo` varchar(45) NOT NULL,
-  `curso_grupo` enum('Primero','Segundo') NOT NULL,
+  `curso_grupo` varchar(45) NOT NULL,
   `fecha_insercion` timestamp NOT NULL,
   `fecha_modificacion` timestamp NOT NULL,
   `fecha_borrado` timestamp NULL DEFAULT NULL,
@@ -239,18 +239,20 @@ DROP TABLE IF EXISTS `tutoria`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `tutoria` (
-  `fecha_tutoria` timestamp NOT NULL,
+  `id_tutoria` int NOT NULL AUTO_INCREMENT,
   `Profesor_usuario_id_usuario` int NOT NULL,
   `Alumno_usuario_id_usuario` int NOT NULL,
+  `fecha_tutoria` timestamp NOT NULL,
   `hora_inicio` time NOT NULL,
   `hora_fin` time NOT NULL,
   `tema_tutoria` varchar(45) NOT NULL,
-  `observaciones` varchar(45) DEFAULT NULL,
+  `observaciones` varchar(500) DEFAULT NULL,
   `lug_tutoria` varchar(45) NOT NULL,
   `fecha_insercion` timestamp NOT NULL,
   `fecha_modificacion` timestamp NOT NULL,
   `fecha_borrado` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`fecha_tutoria`,`Profesor_usuario_id_usuario`,`Alumno_usuario_id_usuario`),
+  PRIMARY KEY (`Profesor_usuario_id_usuario`,`Alumno_usuario_id_usuario`,`id_tutoria`),
+  UNIQUE KEY `id_tutoria_UNIQUE` (`id_tutoria`),
   KEY `fk_tutoria_Profesor1_idx` (`Profesor_usuario_id_usuario`),
   KEY `fk_tutoria_Alumno1_idx` (`Alumno_usuario_id_usuario`),
   CONSTRAINT `fk_tutoria_Alumno1` FOREIGN KEY (`Alumno_usuario_id_usuario`) REFERENCES `alumno` (`usuario_id_usuario`),
@@ -279,9 +281,51 @@ CREATE TABLE `usuario` (
   `fecha_modificacion` timestamp NOT NULL,
   `fecha_borrado` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id_usuario`),
-  UNIQUE KEY `id_usuario_UNIQUE` (`id_usuario`)
+  UNIQUE KEY `id_usuario_UNIQUE` (`id_usuario`),
+  UNIQUE KEY `user_UNIQUE` (`user`),
+  UNIQUE KEY `email_UNIQUE` (`email`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `validar_user_en_email` BEFORE INSERT ON `usuario` FOR EACH ROW BEGIN
+    IF NEW.email NOT LIKE CONCAT('%', NEW.user, '%') THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'El email debe coincidir con el user utilizado';
+    END IF;
+END */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `validar_user_en_email_update` BEFORE UPDATE ON `usuario` FOR EACH ROW BEGIN
+    IF NEW.email NOT LIKE CONCAT('%', NEW.user, '%') THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'El email debe coincidir con el user utilizado';
+    END IF;
+END */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 
 --
 -- Table structure for table `usuario_has_grupo`
@@ -321,4 +365,4 @@ CREATE TABLE `usuario_has_grupo` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-03-20  9:44:37
+-- Dump completed on 2025-03-20 12:59:50
