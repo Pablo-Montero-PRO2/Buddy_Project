@@ -19,21 +19,9 @@ const Grupo = sequelize.define("Grupo", {
   },
   curso_grupo: { 
     type: DataTypes.STRING(45), 
-    allowNull: true 
+    allowNull: false 
   },
-  fecha_insercion: { 
-    type: DataTypes.DATE, 
-    allowNull: false, 
-    defaultValue: DataTypes.NOW 
-  },
-  fecha_modificacion: { 
-    type: DataTypes.DATE, 
-    allowNull: true 
-  },
-  fecha_borrado: { 
-    type: DataTypes.DATE, 
-    allowNull: true 
-  },
+  
 }, 
 {
   timestamps: false, // ✅ No agregará createdAt y updatedAt automáticamente

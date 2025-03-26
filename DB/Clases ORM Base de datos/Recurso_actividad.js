@@ -5,7 +5,6 @@ const RecursoActividad = sequelize.define("RecursoActividad", {
   id_recurso: { 
     type: DataTypes.INTEGER, 
     primaryKey: true,
-    autoIncrement: true,
     allowNull: false 
   },
   actividad_id_actividad: { 
@@ -17,18 +16,7 @@ const RecursoActividad = sequelize.define("RecursoActividad", {
     type: DataTypes.STRING(500), 
     allowNull: false 
   },
-  fecha_insercion: { 
-    type: DataTypes.DATE, 
-    allowNull: false 
-  },
-  fecha_modificacion: { 
-    type: DataTypes.DATE, 
-    allowNull: false 
-  },
-  fecha_borrado: { 
-    type: DataTypes.DATE, 
-    allowNull: true 
-  }
+  
 },
 {
   timestamps: true, // ✅ Sequelize manejará createdAt y updatedAt automáticamente

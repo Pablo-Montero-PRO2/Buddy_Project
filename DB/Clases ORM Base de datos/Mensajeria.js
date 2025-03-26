@@ -4,17 +4,17 @@ const { sequelize } = require("../config/db");
 const Mensajeria = sequelize.define("Mensajeria", {
   id_mensaje: { 
     type: DataTypes.INTEGER,
-    autoIncrement: true,
-    primaryKey: true 
+    primaryKey: true, 
+    allowNull: false,
   },
   Profesor_usuario_id_usuario: {
     type: DataTypes.INTEGER,
-    primaryKey: true, // Clave primaria adicional
+    primaryKey: true, 
     allowNull: false 
   },
   Alumno_usuario_id_usuario: {
     type: DataTypes.INTEGER, 
-    primaryKey: true, // Clave primaria adicional
+    primaryKey: true, 
     allowNull: false 
   },
   fecha_hora_mensaje: {
@@ -29,17 +29,10 @@ const Mensajeria = sequelize.define("Mensajeria", {
     type: DataTypes.STRING(500),
     allowNull: false 
   },
-  fecha_insercion: {
-    type: DataTypes.DATE,
-    allowNull: false
-  },
-  fecha_modificacion: {
-    type: DataTypes.DATE,
-    allowNull: true 
-  },
-  fecha_borrado: {
-    type: DataTypes.DATE,
-    allowNull: true
+  est_mensaje:{
+      type: DataTypes.TINYINT, 
+      allowNull: false 
+
   },
 }, {
   timestamps: true, // Sequelize manejará createdAt y updatedAt automáticamente

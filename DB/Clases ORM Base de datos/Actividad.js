@@ -4,7 +4,6 @@ const { sequelize } = require("../config/db");
 const Actividad = sequelize.define("Actividad", {
   id_actividad: { 
     type: DataTypes.INTEGER, 
-    autoIncrement: true, 
     primaryKey: true 
   },
   Profesor_usuario_id_usuario: { 
@@ -17,31 +16,18 @@ const Actividad = sequelize.define("Actividad", {
     allowNull: false 
   },
   tipo_act: { 
-    type: DataTypes.STRING(45), 
+    type: DataTypes.STRING(50), 
     allowNull: false 
   },
   desc_act: { 
-    type: DataTypes.STRING(800), 
+    type: DataTypes.STRING(500), 
     allowNull: false 
   },
   est_act_prof: { 
-    type: DataTypes.TINYINT, 
+    type: DataTypes.STRING(50),
     allowNull: false 
+ 
   },
-  fecha_insercion: { 
-    type: DataTypes.DATE, 
-    allowNull: false 
-  },
-  fecha_modificacion: { 
-    type: DataTypes.DATE, 
-    allowNull: false 
-  },
-  fecha_borrado: { 
-    type: DataTypes.DATE, 
-    allowNull: true 
-  }
-},
-{
   timestamps: true, // ✅ Sequelize manejará createdAt y updatedAt automáticamente
   underscored: true, // ✅ Convierte createdAt → created_at, updatedAt → updated_at en MySQL
   tableName: 'actividad'

@@ -12,18 +12,14 @@ const UsuarioHasGrupo = sequelize.define("UsuarioHasGrupo", {
     primaryKey: true,
     allowNull: false 
   },
-  fecha_insercion: { 
+  vigencia_inicio: { 
     type: DataTypes.DATE, 
     allowNull: false 
   },
-  fecha_modificacion: { 
-    type: DataTypes.DATE, 
-    allowNull: false 
-  },
-  fecha_borrado: { 
+  vigencia_fin: { 
     type: DataTypes.DATE, 
     allowNull: true 
-  }
+  },
 },
 {
   timestamps: true, // ✅ Sequelize manejará createdAt y updatedAt automáticamente
