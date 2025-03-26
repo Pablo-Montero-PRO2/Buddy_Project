@@ -18,21 +18,10 @@ const AlumnoHasActividad = sequelize.define("AlumnoHasActividad", {
     allowNull: false 
   },
   est_act_alu: { 
-    type: DataTypes.STRING(45), 
+    type: DataTypes.STRING(50), 
     allowNull: false 
   },
-  fecha_insercion: { 
-    type: DataTypes.DATE, 
-    allowNull: false 
-  },
-  fecha_modificacion: { 
-    type: DataTypes.DATE, 
-    allowNull: false 
-  },
-  fecha_borrado: { 
-    type: DataTypes.DATE, 
-    allowNull: true 
-  }
+ 
 },
 {
   timestamps: true, // ✅ Sequelize manejará createdAt y updatedAt automáticamente

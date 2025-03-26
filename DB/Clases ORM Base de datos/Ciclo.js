@@ -16,20 +16,7 @@ const Ciclo = sequelize.define("Ciclo", {
     type: DataTypes.STRING(45), 
     allowNull: false 
   },
-  fecha_insercion: { 
-    type: DataTypes.DATE, 
-    allowNull: false, 
-    defaultValue: DataTypes.NOW 
-  },
-  fecha_modificacion: { 
-    type: DataTypes.DATE, 
-    allowNull: true 
-  },
-  fecha_borrado: { 
-    type: DataTypes.DATE, 
-    allowNull: true 
-  },
-}, 
+},
 {
   timestamps: false, // ✅ Evita que Sequelize agregue createdAt y updatedAt automáticamente
   tableName: "ciclo", // ✅ Asegura que el nombre de la tabla sea "ciclo"

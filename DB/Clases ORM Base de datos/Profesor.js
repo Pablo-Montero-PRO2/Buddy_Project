@@ -8,23 +8,10 @@ const Profesor = sequelize.define("Profesor", {
     allowNull: false 
   },
   es_tutor: { 
-    type: DataTypes.BOOLEAN, 
-    allowNull: false, 
-    defaultValue: false 
+    type: DataTypes.TINYINT, 
+    allowNull: false,  
   },
-  fecha_borrado: { 
-    type: DataTypes.DATE, 
-    allowNull: true 
-  },
-  fecha_insercion: { 
-    type: DataTypes.DATE, 
-    allowNull: false, 
-    defaultValue: DataTypes.NOW 
-  },
-  fecha_modificacion: { 
-    type: DataTypes.DATE, 
-    allowNull: true 
-  },
+  
 }, 
 {
   timestamps: false, // ✅ No agregará createdAt y updatedAt automáticamente

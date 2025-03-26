@@ -2,9 +2,10 @@ const { DataTypes } = require("sequelize");
 const { sequelize } = require("../config/db");
 
 const Tutoria = sequelize.define("Tutoria", {
-  fecha_tutoria: { 
-    type: DataTypes.DATE, 
+  id_tutoria: { 
+    type: DataTypes.INTEGER, 
     primaryKey: true,
+    autoIncrement:true,
     allowNull: false 
   },
   Profesor_usuario_id_usuario: { 
@@ -15,6 +16,10 @@ const Tutoria = sequelize.define("Tutoria", {
   Alumno_usuario_id_usuario: { 
     type: DataTypes.INTEGER, 
     primaryKey: true,
+    allowNull: false 
+  },
+  fecha_tutoria:{
+    type:DataTypes.DATE,
     allowNull: false 
   },
   hora_inicio: { 
@@ -30,25 +35,14 @@ const Tutoria = sequelize.define("Tutoria", {
     allowNull: false 
   },
   observaciones: { 
-    type: DataTypes.STRING(45), 
-    allowNull: true 
+    type: DataTypes.STRING(500), 
+    allowNull: true //Puede ser nulo
   },
   lug_tutoria: { 
     type: DataTypes.STRING(45), 
     allowNull: false 
   },
-  fecha_insercion: { 
-    type: DataTypes.DATE, 
-    allowNull: false 
-  },
-  fecha_modificacion: { 
-    type: DataTypes.DATE, 
-    allowNull: false 
-  },
-  fecha_borrado: { 
-    type: DataTypes.DATE, 
-    allowNull: true 
-  }
+  
 },
 {
   timestamps: true, // ✅ Sequelize manejará createdAt y updatedAt automáticamente

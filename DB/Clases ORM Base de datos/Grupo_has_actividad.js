@@ -17,18 +17,7 @@ const GrupoHasActividad = sequelize.define("GrupoHasActividad", {
     primaryKey: true,
     allowNull: false 
   },
-  fecha_insercion: { 
-    type: DataTypes.DATE, 
-    allowNull: false 
-  },
-  fecha_modificacion: { 
-    type: DataTypes.DATE, 
-    allowNull: false 
-  },
-  fecha_borrado: { 
-    type: DataTypes.DATE, 
-    allowNull: true 
-  }
+  
 },
 {
   timestamps: true, // ✅ Sequelize manejará createdAt y updatedAt automáticamente
