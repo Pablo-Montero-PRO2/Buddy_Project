@@ -28,6 +28,7 @@ CREATE TABLE `actividad` (
   `id_actividad` int NOT NULL,
   `Profesor_usuario_id_usuario` int NOT NULL,
   `fecha_publicacion` timestamp NOT NULL,
+  `titulo_act` varchar(50) NOT NULL,
   `tipo_act` varchar(50) NOT NULL,
   `desc_act` varchar(500) NOT NULL,
   `est_act_prof` varchar(50) NOT NULL,
