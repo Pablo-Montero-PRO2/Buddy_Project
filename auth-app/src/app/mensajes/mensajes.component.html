@@ -1,31 +1,26 @@
 <!-- Contenido principal -->
-<div class="Mensajeria">
-    <main>
-        <header>
-            <h1>Mensajería</h1>
-            <button (click)="abrirMensaje()">Nuevo mensaje</button>
-        </header>
+<div class="content flex-grow-1 p-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1 class="h3">Mensajes</h1>
+        <button (click)="abrirMensaje()" class="btn btn-warning">Nuevo mensaje</button>
+    </div>
 
-        <!-- Ventana para escribir mensaje -->
-        <div id="mensaje"  *ngIf="mensajeAbierto">
-            <form [formGroup]="mensajeForm" (ngSubmit)="enviarMensaje()" method="post">
-                <div>
-                    <span (click)="cerrarMensaje()">[X]</span>
-                    <h3>Nuevo mensaje</h3>
-                    <input id="email" formControlName="email" type="email" autocomplete="email" placeholder="Para..." required>
-                    <br>
-                    <input id="asunto" formControlName="asunto"type="text" placeholder="Asunto">
-                    <br>
-                    <textarea id="contenido" formControlName="contenido"placeholder="Escribe tu mensaje aquí..." rows="5"></textarea>
-                    <br>
-                    <button type="submit">Enviar</button>
-                </div>
-            </form>
-        </div>
-       
-        <!-- Lista de mensajes -->
-        <div class="listaMensajes">
-            <section id="listaMensajes"></section>
-        </div>
-    </main>
+    <!-- Ventana para escribir mensaje -->
+    <!-- Ventana para escribir mensaje -->
+<div *ngIf="mensajeAbierto" class="position-fixed top-50 start-50 translate-middle bg-white p-4 rounded shadow w-50">
+        <form [formGroup]="mensajeForm" (ngSubmit)="enviarMensaje()" method="post">
+            <div class="d-flex justify-content-between align-items-center">
+                <h3>Nuevo mensaje</h3>
+                <span (click)="cerrarMensaje()" class="text-danger fw-bold" style="cursor: pointer;">[X]</span>
+            </div>
+            <input id="email" formControlName="email" type="email" autocomplete="email" placeholder="Para..." required class="form-control my-2">
+            <input id="asunto" formControlName="asunto" type="text" placeholder="Asunto" class="form-control my-2">
+            <textarea id="contenido" formControlName="contenido" placeholder="Escribe tu mensaje aquí..." rows="5" class="form-control my-2"></textarea>
+            <button type="submit" class="btn btn-warning w-100">Enviar</button>
+        </form>
+    </div>
+
+    <!-- Lista de mensajes -->
+    <div class="listaMensajes">
+    </div>
 </div>
