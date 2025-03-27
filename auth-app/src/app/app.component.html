@@ -1,0 +1,10 @@
+<div class="d-flex vh-100">
+    <!-- Menú lateral -->
+    <app-menu-lateral class="menuLateral" *ngIf="!isLoginPage"></app-menu-lateral><!-- Mostrar el menú solo si no estamos en la ruta de login-->
+  
+    <!-- Contenido principal -->
+    <div class="content flex-grow-1 p-4">
+      <router-outlet></router-outlet> <!--📌 Esto carga la vista de login -->
+    </div>
+  </div>
+  

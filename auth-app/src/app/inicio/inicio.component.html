@@ -1,0 +1,24 @@
+<h2 class="mt-4">Actividades</h2>
+
+<div *ngFor="let act of actividades" class="actividad bg-light p-3 rounded shadow-sm w-100 mt-3">
+  <h3 class="mb-1">{{ act.tipo }}: {{ act.descripcion }}</h3>
+  <p class="text-start">
+    <sub>{{ act.estado === 'En proceso' ? 'Pendiente' : 'Completada' }}</sub>
+  </p>
+
+  <!-- Botón principal -->
+  <button (click)="irActividad(act.id)" class="btn btn-warning me-2">
+    {{ act.estado === 'En proceso' ? 'Continuar' : 'Volver a realizar' }}
+  </button>
+
+  <!-- Botones de prueba con estilo discreto -->
+  <button class="btn btn-outline-secondary me-2" (click)="actualizarEstado(act.id, 'Finalizada')">
+    Marcar como Finalizada
+  </button>
+
+  <button class="btn btn-outline-secondary" (click)="actualizarEstado(act.id, 'En proceso')">
+    Marcar como En proceso
+  </button>
+</div>
+
+

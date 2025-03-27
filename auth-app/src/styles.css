@@ -1,0 +1,129 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #ffffff;
+    text-align: left;
+}
+
+/* Menú lateral */
+.MenuLateral {
+    width: 300px;
+}
+
+/* Asegura que los enlaces estén alineados a la izquierda */
+.MenuLateral .nav-link {
+    text-align: left; /* Alinea el texto a la izquierda */
+    padding-left: 10px; /* Da un poco de espacio a la izquierda */
+    color: #333; /* Color de texto oscuro */
+    font-weight: 500; /* Hace que el texto sea más visible */
+    transition: all 0.3s ease-in-out; /* Suaviza la animación */
+}
+
+/* Cambia el color al pasar el mouse */
+.MenuLateral .nav-link:hover {
+    background-color: #e0c52b; /* Color amarillo claro */
+    color: white; /* Texto en blanco */
+    border-radius: 5px; /* Bordes redondeados */
+}
+
+/* Cambia el color cuando el enlace está activo o enfocado */
+.MenuLateral .nav-link:active,
+.MenuLateral .nav-link:focus {
+    background-color: #ad9923; /* Un tono más oscuro de amarillo */
+    color: white; /* Mantener el texto en blanco */
+    border-radius: 5px;
+}
+
+/* Estilos para la barra de navegación */ 
+.navbar-brand img { 
+    height: 40px;
+    max-width: 100%; 
+}
+
+.navbar-nav .nav-link { 
+    margin-right: 15px; 
+}
+
+/* Efecto de sombreado al pasar el ratón sobre la barra de navegación */
+.navbar:hover {
+    background-color:rgba(255, 255, 255, 0.2); 
+    border-radius: 5px; 
+}
+
+/* Estilos para el contenido principal */ 
+main { 
+    margin-top: 50px; }
+
+h1 { 
+    margin-bottom: 20px; 
+}
+
+p { 
+    color: #6c757d; 
+    margin-bottom: 40px; 
+}
+
+
+/* Estilos para el formulario */ 
+.form-label { 
+    font-weight: bold; 
+}
+
+.form-control { 
+    margin-bottom: 20px; 
+    text-align: left;
+}
+
+.form-control::placeholder { 
+    color: #6c757d; 
+}
+
+/* Botón amarillo de Bootstrap personalizado */
+.btn-warning {
+    background-color: #e0c52b;
+    color: #ffffff;
+    border: none;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.btn-warning:hover {
+    background-color: #ad9923;
+    color: #ffffff;
+    transform: scale(1.05);
+}
+
+.btn-warning:active {
+    background-color: #967b1e !important; /* Un tono más oscuro para el efecto de clic */
+    color: white !important; /* Mantener el texto en blanco */
+    outline: none; /* Opcional: quitar el borde de enfoque */
+    transform: scale(0.95);
+}
+
+/* Formulario modal nueva ocurrencia */
+#mensaje {
+    width: 40%;
+    z-index: 1000;
+}
+
+/* Tarjeta de mensaje */
+.mensaje-card {
+    text-align: left;
+}
+
+/* Correo en azul */
+.text-primary {
+    font-weight: normal;
+}
+
+/* Ajuste de la hora */
+.text-muted {
+    font-size: 12px;
+}
+
+.navbar-brand img {
+    display: block !important;
+    width: auto;
+    max-width: 100px;
+    height: auto;
+  }

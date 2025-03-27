@@ -1,0 +1,66 @@
+
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+      <!-- Logotipo de la empresa -->
+      <a class="navbar-brand" href="#">
+        <img src="assets/logo.png" alt="LOGO PRO2FP" class="d-inline-block align-top">
+      </a>
+      <!-- Botón para colapsar la barra de navegación en pantallas pequeñas -->
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <!-- Contenido de la barra de navegación que se colapsa -->
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <!-- Lista de elementos de navegación alineados a la derecha -->
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="#">Pro2fp.es</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Campus virtual</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Cuenta Office365</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <main class="container-fluid">
+    <section class="row justify-content-center">
+      <div class="col-12 col-sm-10 col-md-8 col-lg-6">
+        <!-- Título principal -->
+        <h1>Bienvenida/o a la aplicación de mentoring y competencias digitales</h1>
+        <p>Introduce tu nombre de usuario y tu contraseña para acceder</p>
+        <!-- Formulario de inicio de sesión -->
+          <form [formGroup]="loginForm" (ngSubmit)="onLogin()">
+            <mat-card class="p-4 shadow bg-light">
+              <!-- Campo para el correo electrónico -->
+              <div class="mb-3">
+                <label for="email" class="form-label text-start d-block">Correo electrónico</label>
+                <mat-form-field appearance="fill" class="w-100">
+                  <input matInput id="email" formControlName="email" type="email" placeholder="Introduce tu correo electrónico" required>
+                </mat-form-field>
+              </div>
+              <!-- Campo para la contraseña -->
+              <div class="mb-3">
+                <label for="password" class="form-label text-start d-block">Contraseña</label>
+                <mat-form-field appearance="fill" class="w-100">
+                  <input matInput id="password" formControlName="password" type="password" placeholder="Introduce tu clave" required>
+                </mat-form-field>
+              </div>
+              <!-- Mensaje de error -->
+              <div *ngIf="errorMessage" class="text-danger mb-3">{{ errorMessage }}</div>
+              <!-- Enlace para recordar contraseña -->
+              <div class="mb-3">
+                <a href="#">Recordar mi contraseña</a>
+              </div>
+              <!-- Botón de acceso -->
+              <button  class="btn btn-warning" type="submit" >Acceder</button>
+            </mat-card>
+          </form>
+        </div>
+      </section>
+    </main>
+      
+
