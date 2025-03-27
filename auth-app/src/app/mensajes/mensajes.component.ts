@@ -11,10 +11,10 @@ import { MensajeriaService } from '../services/mensajeria.service';
     CommonModule,
     FormsModule,
     ReactiveFormsModule],
-  templateUrl: './mensajeria.component.html',
-  styleUrls: ['./mensajeria.component.css']
+  templateUrl: './mensajes.component.html',
+  styleUrls: ['./mensajes.component.css']
 })
-export class MensajeriaComponent implements OnInit {
+export class MensajesComponent implements OnInit {
   mensajeForm!: FormGroup;
   mensajes: any[] = [];
   mensajeAbierto: boolean = false;
@@ -93,12 +93,24 @@ export class MensajeriaComponent implements OnInit {
       listaMensajes.innerHTML = '';
       this.mensajes.forEach((mensaje, index) => {
         const mensajeHTML = `
-          <article>
-            <h2>Alumno: ${mensaje.email}</h2>
-            <p>Último mensaje: ${mensaje.contenido}</p>
-            <span>${mensaje.fecha}</span>
-            <button onclick="eliminarMensaje(${index})">Eliminar</button>
-            }
+          <article class="card p-3 mb-3 shadow-sm">
+            <div class="d-flex justify-content-between align-items-center">
+              <!-- Alumno a la izquierda -->
+              <h2 class="h5 mb-0">${mensaje.email}</h2>
+              <!-- Fecha a la derecha -->
+              <span class="text-muted">${mensaje.fecha}</span>
+            </div>
+            <!-- Último mensaje -->
+            <p class="mt-2">${mensaje.contenido}</p>
+            <!-- Botones alineados a la izquierda -->
+            <div class="mt-3">
+              <button class="btn btn-danger me-2" onclick="eliminarMensaje(${index})">Eliminar</button>
+              ${
+                !mensaje.publicado
+                  ? `<button class="btn btn-success" onclick="publicarMensaje(${index})">Publicar</button>`
+                  : '<span class="text-success fw-bold">Publicado</span>'
+              }
+            </div>
           </article>
         `;
         listaMensajes.innerHTML += mensajeHTML;
