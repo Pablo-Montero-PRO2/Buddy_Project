@@ -1,21 +1,32 @@
-<!-- Contenido principal -->
-<div class="content flex-grow-1 p-4">
-    <div class="d-flex justify-content-between mb-3">
-        <h1 class="h3">Competencias digitales</h1>
-        <button class="btn btn-warning">Nueva actividad</button>
+<div class="container">
+    <h2>Competencias Digitales</h2>
+    
+    <button (click)="mostrarCompetencia()">Nueva actividad</button>
+    
+    <div id="mensaje" class="mensaje-container" style="display: none;">
+      <h3>Enviar Mensaje</h3>
+      <form (submit)="enviarMensaje($event)">
+        <label for="titulo">Título:</label>
+        <input type="text" id="titulo" required />
+        
+        <label for="descripcion">Descripción:</label>
+        <textarea id="descripcion" required></textarea>
+
+        <label for="estado">Estado</label>
+        <select id="estado">
+          <option value="pendiente">Pendiente</option>
+          <option value="en progreso">En progreso</option>
+          <option value="finalizado">Finalizado</option>
+        </select>
+        
+        <button type="submit">Enviar</button>
+        <button type="button" (click)="cerrarCompetencia()">Cerrar</button>
+      </form>
+      </div>
+      <div id="listaMensajes">
+        <section id="listaMensajes">
+
+        </section>
     </div>
-    <div class="mb-3 d-flex justify-content-between align-items-center">
-        <h4>Actividad: Office365</h4>
-        <img src="assets/Imagen.jpg" alt="Imagen" class="img-fluid" style="width: 20vw; height: auto;"/>
-    </div>
-    <div class="mb-3 text-start">
-        <p class="mb-0">Publicada</p>
-    </div>
-    <div class="mb-3 d-flex justify-content-between align-items-center">
-        <h4>Actividad: Seguridad digital</h4>
-        <img src="assets/Imagen2.jpg" alt="Imagen" class="img-fluid" style="width: 20vw; height: auto;"/>
-    </div>
-    <div class="mb-3 text-start">
-        <p class="mb-0">Publicada</p>
-    </div>
-</div>
+  </div>
+  
