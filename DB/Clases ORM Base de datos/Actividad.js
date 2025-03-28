@@ -28,10 +28,34 @@ const Actividad = sequelize.define("Actividad", {
     allowNull: false 
  
   },
+  createdAt: {
+    type: DataTypes.DATE,
+    allowNull: false,
+  },
+  updatedAt: {
+    type: DataTypes.DATE,
+    allowNull: true,
+  },
+ 
   timestamps: true, // ✅ Sequelize manejará createdAt y updatedAt automáticamente
   underscored: true, // ✅ Convierte createdAt → created_at, updatedAt → updated_at en MySQL
   tableName: 'actividad'
   
 });
-
+Actividad.belongsTo(Profesor, {
+  foreignKey: "Profesor_usuario_id_usuario",
+  as: "profesor",
+});
+Actividad.belongsToMany(Alumno, {
+  through: AlumnoHasActividad,
+  foreignKey: "actividad_id_actividad",
+});
+Actividad.belongsToMany(Grupo, {
+  through: GrupoHasActividad,
+  foreignKey: "actividad_id_actividad",
+});
+Actividad.hasMany(RecursoActividad, {
+  foreignKey: "actividad_id_actividad",
+  as: "recursos",
+});
 module.exports = Actividad;

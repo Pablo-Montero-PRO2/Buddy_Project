@@ -16,12 +16,23 @@ const RecursoActividad = sequelize.define("RecursoActividad", {
     type: DataTypes.STRING(500), 
     allowNull: false 
   },
-  
+  createdAt: {
+    type: DataTypes.DATE,
+    allowNull: false,
+  },
+  updatedAt: {
+    type: DataTypes.DATE,
+    allowNull: true,
+  },
 },
 {
   timestamps: true, // ✅ Sequelize manejará createdAt y updatedAt automáticamente
   underscored: true, // ✅ Convierte createdAt → created_at, updatedAt → updated_at en MySQL
   tableName: 'recurso_actividad'
+});
+RecursoActividad.belongsTo(Actividad, {
+  foreignKey: 'actividad_id_actividad',
+  as: 'actividad'
 });
 
 module.exports = RecursoActividad;

@@ -42,12 +42,28 @@ const Tutoria = sequelize.define("Tutoria", {
     type: DataTypes.STRING(45), 
     allowNull: false 
   },
-  
+  createdAt: {
+    type: DataTypes.DATE,
+    allowNull: false,
+  },
+  updatedAt: {
+    type: DataTypes.DATE,
+    allowNull: true,
+  },
 },
 {
   timestamps: true, // ✅ Sequelize manejará createdAt y updatedAt automáticamente
   underscored: true, // ✅ Convierte createdAt → created_at, updatedAt → updated_at en MySQL
   tableName: 'tutoria'
 });
+Tutoria.belongsTo(Profesor, {
+  foreignKey: "Profesor_usuario_id_usuario",
+  as: "profesor",
+});
+Tutoria.belongsTo(Alumno, {
+  foreignKey: "Alumno_usuario_id_usuario",
+  as: "alumno",
+});
+
 
 module.exports = Tutoria;

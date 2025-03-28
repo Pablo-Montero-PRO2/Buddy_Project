@@ -20,11 +20,20 @@ const UsuarioHasGrupo = sequelize.define("UsuarioHasGrupo", {
     type: DataTypes.DATE, 
     allowNull: true 
   },
+  createdAt: {
+    type: DataTypes.DATE,
+    allowNull: false,
+  },
+  updatedAt: {
+    type: DataTypes.DATE,
+    allowNull: true,
+  },
 },
 {
   timestamps: true, // ✅ Sequelize manejará createdAt y updatedAt automáticamente
   underscored: true, // ✅ Convierte createdAt → created_at, updatedAt → updated_at en MySQL
   tableName: 'usuario_has_grupo'
 });
-
+UsuarioHasGrupo.belongsTo(Usuario, { foreignKey: "usuario_id_usuario" });
+UsuarioHasGrupo.belongsTo(Grupo, { foreignKey: "grupo_id_grupo" });
 module.exports = UsuarioHasGrupo;
