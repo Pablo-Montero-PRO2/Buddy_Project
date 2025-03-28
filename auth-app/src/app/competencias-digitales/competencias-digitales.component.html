@@ -1,32 +1,44 @@
 <div class="container">
-    <h2>Competencias Digitales</h2>
-    
-    <button (click)="mostrarCompetencia()">Nueva actividad</button>
-    
-    <div id="mensaje" class="mensaje-container" style="display: none;">
-      <h3>Enviar Mensaje</h3>
-      <form (submit)="enviarMensaje($event)">
-        <label for="titulo">Título:</label>
-        <input type="text" id="titulo" required />
-        
-        <label for="descripcion">Descripción:</label>
-        <textarea id="descripcion" required></textarea>
+  <h2>Competencias Digitales</h2>
 
-        <label for="estado">Estado</label>
-        <select id="estado">
-          <option value="pendiente">Pendiente</option>
-          <option value="en progreso">En progreso</option>
-          <option value="finalizado">Finalizado</option>
-        </select>
-        
-        <button type="submit">Enviar</button>
-        <button type="button" (click)="cerrarCompetencia()">Cerrar</button>
+  <button (click)="mostrarCompetenciasDigitales()">Nueva actividad</button>
+
+  <div id="mensaje" class="mensaje-container" style="display: none;">
+      <h3>{{ actividadEditada ? 'Editar actividad' : 'Enviar Mensaje' }}</h3>
+      <form (submit)="enviarCompetenciasDigitales($event)">
+          <label for="titulo">Título:</label>
+          <input type="text" id="titulo" required />
+ 
+          <label for="descripcion">Descripción:</label>
+          <textarea id="descripcion" required></textarea>
+
+          <label for="estado">Estado</label>
+          <select id="estado">
+              <option value="Sin publicar">Sin publicar</option>
+              <option value="Publicado">Publicado</option>
+          </select>
+
+          <!-- URL inicial -->
+          <div *ngFor="let url of urls; let i = index">
+              <label for="url{{i}}">URL {{i + 1}}:</label>
+              <input type="text" [id]="'url' + i" [value]="url.url" (input)="onUrlChange(i, $event)" placeholder="Ingresa una URL" />
+
+              <label for="descripcion{{i}}">Descripción:</label>
+              <input type="text" [id]="'descripcion' + i" [value]="url.descripcion" (input)="onDescripcionChange(i, $event)" placeholder="Ingresa una descripción" />
+
+              <button type="button" (click)="eliminarUrl(i)">Eliminar URL</button>
+          </div>
+
+          <!-- Botón para agregar más campos de URL -->
+          <button type="button" (click)="agregarUrl()">Agregar otra URL</button>
+          <button type="submit">{{ actividadEditada ? 'Actualizar' : 'Enviar' }}</button>
+          <button type="button" (click)="cerrarCompetenciasDigitales()">Cerrar</button>
       </form>
-      </div>
-      <div id="listaMensajes">
-        <section id="listaMensajes">
-
-        </section>
-    </div>
   </div>
-  
+
+  <div id="listaMensajes">
+      <section id="listaMensajes">
+          <!-- Aquí se mostrarán los mensajes -->
+      </section>
+  </div>
+</div>
