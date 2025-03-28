@@ -31,7 +31,7 @@ const Tutoria = sequelize.define("Tutoria", {
     allowNull: false 
   },
   tema_tutoria: { 
-    type: DataTypes.STRING(45), 
+    type: DataTypes.STRING(256), 
     allowNull: false 
   },
   observaciones: { 

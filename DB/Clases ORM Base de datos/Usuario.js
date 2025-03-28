@@ -41,7 +41,7 @@ const Usuario = sequelize.define("Usuario", {
     allowNull: false 
   },
   foto: { 
-    type: DataTypes.STRING(45), 
+    type: DataTypes.STRING(500), 
     allowNull: false 
   },
   createdAt: {

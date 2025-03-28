@@ -6,6 +6,7 @@ const Mensajeria = sequelize.define("Mensajeria", {
     type: DataTypes.INTEGER,
     primaryKey: true, 
     allowNull: false,
+    autoIncrement: true
   },
   Profesor_usuario_id_usuario: {
     type: DataTypes.INTEGER,

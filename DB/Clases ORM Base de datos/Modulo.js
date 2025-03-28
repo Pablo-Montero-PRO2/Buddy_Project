@@ -13,7 +13,7 @@ const Modulo = sequelize.define("Modulo", {
     allowNull: false 
   },
   nom_modulo: {
-    type: DataTypes.STRING(45),
+    type: DataTypes.STRING(255),
     allowNull: false 
   },
   createdAt: {

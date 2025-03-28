@@ -5,7 +5,8 @@ const RecursoActividad = sequelize.define("RecursoActividad", {
   id_recurso: { 
     type: DataTypes.INTEGER, 
     primaryKey: true,
-    allowNull: false 
+    allowNull: false,
+    autoIncrement: true 
   },
   actividad_id_actividad: { 
     type: DataTypes.INTEGER,
