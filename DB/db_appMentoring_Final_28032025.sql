@@ -57,7 +57,7 @@ CREATE TABLE `actividad` ( /*Crea la tabla que maneja actividades.*/
   `tipo_act` varchar(50) NOT NULL, /*Tipo de actividad con límite de 50 carácteres (No puede estar vacío)*/
   `desc_act` varchar(500) NOT NULL, /*Descripción de la actividad con límite de 500 carácteres (No puede estar vacío)*/
   `est_act_prof` varchar(50) NOT NULL, /*Estado actual de la actividad con límite de 50 carácteres (No puede estar vacío)*/
-  `createdAt` timestamp NULL DEFAULT NULL, /*Fecha que indica cuando se ha creado la actividad (Puede estar vacío, será vacío por defecto si no se especifica un valor.)*/
+  `createdAt` timestamp NOT NULL, /*Fecha que indica cuando se ha creado la actividad (No puede estar vacío.)*/
   `updatedAt` timestamp NULL DEFAULT NULL, /*Fecha que indica cuando se ha actualizado la actividad (Puede estar vacío, será vacío por defecto si no se especifica un valor.)*/
   PRIMARY KEY (`id_actividad`,`Profesor_usuario_id_usuario`), /*Llave primaria de la actividad creada*/
   UNIQUE KEY `id_actividad_UNIQUE` (`id_actividad`), /*Llave única para actividad.*/
@@ -85,7 +85,7 @@ existe.*/
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `alumno` (
   `usuario_id_usuario` int NOT NULL, /*Llave foranea de usuario referenciada ya que los alumnos son usuarios (No puede estar vacío)*/
-  `createdAt` timestamp NULL DEFAULT NULL, /*Fecha que indica cuando se ha creado un alumno (Puede estar vacío, será vacío por defecto si no se especifica un valor.)*/
+  `createdAt` timestamp NOT NULL, /*Fecha que indica cuando se ha creado un alumno (No puede estar vacío)*/
   `updatedAt` timestamp NULL DEFAULT NULL, /*Fecha que indica cuando se ha actualizado un alumno (Puede estar vacío, será vacío por defecto si no se especifica un valor.)*/
   PRIMARY KEY (`usuario_id_usuario`), /*Llave principal del alumno*/
   UNIQUE KEY `usuario_id_usuario_UNIQUE` (`usuario_id_usuario`), /*Llave única para el alumno*/
@@ -106,18 +106,19 @@ UNLOCK TABLES; /*Vuelve a abrir la tabla*/
 -- Table structure for table `alumno_has_actividad`
 --
 
-DROP TABLE IF EXISTS `alumno_has_actividad`; 
+DROP TABLE IF EXISTS `alumno_has_actividad`; /*Se asegurá de que no exista una tabla de alumno_has_actividad previa y anticuada, intentando borrar la tabla llamada 'alumno_has_actividad' si
+existe.*/
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `alumno_has_actividad` (
-  `Alumno_usuario_id_usuario` int NOT NULL,
-  `actividad_id_actividad` int NOT NULL,
-  `actividad_Profesor_usuario_id_usuario` int NOT NULL,
-  `est_act_alu` varchar(50) NOT NULL,
-  `createdAt` timestamp NULL DEFAULT NULL,
-  `updatedAt` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`Alumno_usuario_id_usuario`,`actividad_id_actividad`,`actividad_Profesor_usuario_id_usuario`),
-  KEY `fk_Alumno_has_actividad_actividad1_idx` (`actividad_id_actividad`,`actividad_Profesor_usuario_id_usuario`),
+CREATE TABLE `alumno_has_actividad` ( /*Crea la tabla que gestiona el estado de un alumno que tiene una actividad*/
+  `Alumno_usuario_id_usuario` int NOT NULL, /*Llave foránea del alumno asociado a la actividad (No puede estar vacío)*/
+  `actividad_id_actividad` int NOT NULL, /*Llave foránea de la actividad que ha sido asignada al alumno (No puede estar vacío) */
+  `actividad_Profesor_usuario_id_usuario` int NOT NULL, /*Llave foránea del profesor que ha creado la actividad (No puede estar vacío)*/
+  `est_act_alu` varchar(50) NOT NULL, /*Llave que contiene el estado actual de la actividad que el profesor ha asignado al alumno (No puede estar vacío)*/
+  `createdAt` timestamp NOT NULL, /*Fecha que contiene cuando ha sido creada la tabla (No puede estar vacío)*/
+  `updatedAt` timestamp NULL DEFAULT NULL, /*Fecha que contiene cuando ha sido actualizada la tabla (Puede estar vacío, estará vacío por defecto si no se le especifica un dato)*/
+  PRIMARY KEY (`Alumno_usuario_id_usuario`,`actividad_id_actividad`,`actividad_Profesor_usuario_id_usuario`), /*Llave primaria del estado de una actividad, creada con una combinación de las IDs del profesor, el alumno y la actividad*/
+  KEY `fk_Alumno_has_actividad_actividad1_idx` (`actividad_id_actividad`,`actividad_Profesor_usuario_id_usuario`), /*Índice que optimiza las consultas de actividades y profesores cuando se consulta la información de un alumno*/
   KEY `fk_Alumno_has_actividad_Alumno1_idx` (`Alumno_usuario_id_usuario`),
   CONSTRAINT `fk_Alumno_has_actividad_actividad1` FOREIGN KEY (`actividad_id_actividad`, `actividad_Profesor_usuario_id_usuario`) REFERENCES `actividad` (`id_actividad`, `Profesor_usuario_id_usuario`),
   CONSTRAINT `fk_Alumno_has_actividad_Alumno1` FOREIGN KEY (`Alumno_usuario_id_usuario`) REFERENCES `alumno` (`usuario_id_usuario`)
@@ -137,14 +138,15 @@ UNLOCK TABLES; /*Vuelve a abrir la tabla*/
 -- Table structure for table `ciclo`
 --
 
-DROP TABLE IF EXISTS `ciclo`;
+DROP TABLE IF EXISTS `ciclo`; /*Se asegurá de que no exista una tabla de ciclo previa y anticuada, intentando borrar la tabla llamada 'ciclo' si
+existe.*/
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `ciclo` (
   `id_ciclo` int NOT NULL AUTO_INCREMENT,
   `nom_ciclo` varchar(45) NOT NULL,
   `grado_ciclo` varchar(45) NOT NULL,
-  `createdAt` timestamp NULL DEFAULT NULL,
+  `createdAt` timestamp NOT NULL,
   `updatedAt` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id_ciclo`),
   UNIQUE KEY `id_ciclo_UNIQUE` (`id_ciclo`)
@@ -164,7 +166,8 @@ UNLOCK TABLES; /*Vuelve a abrir la tabla*/
 -- Table structure for table `grupo`
 --
 
-DROP TABLE IF EXISTS `grupo`;
+DROP TABLE IF EXISTS `grupo`; /*Se asegurá de que no exista una tabla de grupo previa y anticuada, intentando borrar la tabla llamada 'grupo' si
+existe.*/
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `grupo` (
@@ -172,7 +175,7 @@ CREATE TABLE `grupo` (
   `ciclo_id_ciclo` int NOT NULL,
   `nom_grupo` varchar(45) NOT NULL,
   `curso_grupo` varchar(45) NOT NULL,
-  `createdAt` timestamp NULL DEFAULT NULL,
+  `createdAt` timestamp NOT NULL,
   `updatedAt` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id_grupo`,`ciclo_id_ciclo`),
   UNIQUE KEY `id_grupo_UNIQUE` (`id_grupo`),
@@ -194,14 +197,15 @@ UNLOCK TABLES; /*Vuelve a abrir la tabla*/
 -- Table structure for table `grupo_has_actividad`
 --
 
-DROP TABLE IF EXISTS `grupo_has_actividad`;
+DROP TABLE IF EXISTS `grupo_has_actividad`; /*Se asegurá de que no exista una tabla de grupo_has_actividad previa y anticuada, intentando borrar la tabla llamada 'grupo_has_actividad' si
+existe.*/
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `grupo_has_actividad` (
   `grupo_id_grupo` int NOT NULL,
   `actividad_id_actividad` int NOT NULL,
   `fecha_actividad` timestamp NOT NULL,
-  `createdAt` timestamp NULL DEFAULT NULL,
+  `createdAt` timestamp NOT NULL,
   `updatedAt` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`grupo_id_grupo`,`actividad_id_actividad`,`fecha_actividad`),
   KEY `fk_grupo_has_actividad_actividad1_idx` (`actividad_id_actividad`),
@@ -224,7 +228,8 @@ UNLOCK TABLES; /*Vuelve a abrir la tabla*/
 -- Table structure for table `mensajeria`
 --
 
-DROP TABLE IF EXISTS `mensajeria`;
+DROP TABLE IF EXISTS `mensajeria`; /*Se asegurá de que no exista una tabla de mensajería previa y anticuada, intentando borrar la tabla llamada 'mensajería' si
+existe.*/
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `mensajeria` (
@@ -235,7 +240,7 @@ CREATE TABLE `mensajeria` (
   `asunto_mensaje` varchar(45) DEFAULT NULL,
   `desc_mensaje` varchar(500) NOT NULL,
   `est_mensaje` tinyint NOT NULL, -- 1: leído, 0: no leído.
-  `createdAt` timestamp NULL DEFAULT NULL,
+  `createdAt` timestamp NOT NULL,
   `updatedAt` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id_mensaje`,`Profesor_usuario_id_usuario`,`Alumno_usuario_id_usuario`),
   UNIQUE KEY `id_mensaje_UNIQUE` (`id_mensaje`),
@@ -259,14 +264,15 @@ UNLOCK TABLES; /*Vuelve a abrir la tabla*/
 -- Table structure for table `modulo`
 --
 
-DROP TABLE IF EXISTS `modulo`;
+DROP TABLE IF EXISTS `modulo`; /*Se asegurá de que no exista una tabla de modulo previa y anticuada, intentando borrar la tabla llamada 'modulo' si
+existe.*/
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `modulo` (
   `id_modulo` int NOT NULL,
   `ciclo_id_ciclo` int NOT NULL,
   `nom_modulo` varchar(45) NOT NULL,
-  `createdAt` timestamp NULL DEFAULT NULL,
+  `createdAt` timestamp NOT NULL,
   `updatedAt` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id_modulo`,`ciclo_id_ciclo`),
   UNIQUE KEY `id_modulo_UNIQUE` (`id_modulo`),
@@ -288,13 +294,14 @@ UNLOCK TABLES; /*Vuelve a abrir la tabla*/
 -- Table structure for table `profesor`
 --
 
-DROP TABLE IF EXISTS `profesor`;
+DROP TABLE IF EXISTS `profesor`; /*Se asegurá de que no exista una tabla de profesor previa y anticuada, intentando borrar la tabla llamada 'profesor' si
+existe.*/
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `profesor` (
   `usuario_id_usuario` int NOT NULL,
   `es_tutor` tinyint NOT NULL,  -- 1: es tutor, 0: no es tutor
-  `createdAt` timestamp NULL DEFAULT NULL,
+  `createdAt` timestamp NOT NULL,
   `updatedAt` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`usuario_id_usuario`),
   UNIQUE KEY `usuario_id_usuario_UNIQUE` (`usuario_id_usuario`),
@@ -315,14 +322,15 @@ UNLOCK TABLES; /*Vuelve a abrir la tabla*/
 -- Table structure for table `recurso_actividad`
 --
 
-DROP TABLE IF EXISTS `recurso_actividad`;
+DROP TABLE IF EXISTS `recurso_actividad`; /*Se asegurá de que no exista una tabla de recurso_actividad previa y anticuada, intentando borrar la tabla llamada 'recurso_actividad' si
+existe.*/
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `recurso_actividad` (
   `id_recurso` int NOT NULL AUTO_INCREMENT,
   `actividad_id_actividad` int NOT NULL,
   `desc_recurso` varchar(500) NOT NULL,
-  `createdAt` timestamp NULL DEFAULT NULL,
+  `createdAt` timestamp NOT NULL,
   `updatedAt` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id_recurso`,`actividad_id_actividad`),
   KEY `fk_recurso_actividad1_idx` (`actividad_id_actividad`),
@@ -343,7 +351,8 @@ UNLOCK TABLES; /*Vuelve a abrir la tabla*/
 -- Table structure for table `tutoria`
 --
 
-DROP TABLE IF EXISTS `tutoria`;
+DROP TABLE IF EXISTS `tutoria`; /*Se asegurá de que no exista una tabla de tutoría previa y anticuada, intentando borrar la tabla llamada 'tutoria' si
+existe.*/
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `tutoria` (
@@ -356,7 +365,7 @@ CREATE TABLE `tutoria` (
   `tema_tutoria` varchar(45) NOT NULL,
   `observaciones` varchar(500) DEFAULT NULL,
   `lug_tutoria` varchar(45) NOT NULL,
-  `createdAt` timestamp NULL DEFAULT NULL,
+  `createdAt` timestamp NOT NULL,
   `updatedAt` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`Profesor_usuario_id_usuario`,`Alumno_usuario_id_usuario`,`id_tutoria`),
   UNIQUE KEY `id_tutoria_UNIQUE` (`id_tutoria`),
@@ -380,7 +389,8 @@ UNLOCK TABLES; /*Vuelve a abrir la tabla*/
 -- Table structure for table `usuario`
 --
 
-DROP TABLE IF EXISTS `usuario`;
+DROP TABLE IF EXISTS `usuario`; /*Se asegurá de que no exista una tabla de usuario previa y anticuada, intentando borrar la tabla llamada 'usuario' si
+existe.*/
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `usuario` (
@@ -393,7 +403,7 @@ CREATE TABLE `usuario` (
   `email` varchar(45) NOT NULL,
   `telf` varchar(45) NOT NULL,
   `foto` varchar(45) NOT NULL,
-  `createdAt` timestamp NULL DEFAULT NULL,
+  `createdAt` timestamp NOT NULL,
   `updatedAt` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id_usuario`),
   UNIQUE KEY `id_usuario_UNIQUE` (`id_usuario`),
@@ -456,7 +466,8 @@ DELIMITER ;
 -- Table structure for table `usuario_has_grupo`
 --
 
-DROP TABLE IF EXISTS `usuario_has_grupo`;
+DROP TABLE IF EXISTS `usuario_has_grupo`; /*Se asegurá de que no exista una tabla de usuario_has_grupo previa y anticuada, intentando borrar la tabla llamada 'usuario_has_grupo' si
+existe.*/
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `usuario_has_grupo` (
@@ -464,7 +475,7 @@ CREATE TABLE `usuario_has_grupo` (
   `grupo_id_grupo` int NOT NULL,
   `vigencia_inicio` timestamp NOT NULL,
   `vigencia_fin` timestamp NULL DEFAULT NULL,
-  `createdAt` timestamp NULL DEFAULT NULL,
+  `createdAt` timestamp NOT NULL,
   `updatedAt` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`usuario_id_usuario`,`grupo_id_grupo`),
   KEY `fk_usuario_has_grupo_grupo1_idx` (`grupo_id_grupo`),
