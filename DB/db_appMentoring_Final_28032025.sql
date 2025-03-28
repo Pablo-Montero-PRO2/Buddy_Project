@@ -275,7 +275,6 @@ CREATE TABLE `modulo` (/*Crea la tabla que contiene los módulos que contiene un
   `createdAt` timestamp NOT NULL, /*Fecha que indica cuando ha sido creado un módulo (No puede estar vacío)*/
   `updatedAt` timestamp NULL DEFAULT NULL, /*Fecha que indica cuando ha sido actualizado un módulo (Puede estar vacío, si no se le asigna un valor estará vacío por defecto)*/
   PRIMARY KEY (`id_modulo`,`ciclo_id_ciclo`), /*Indica que la clave primaria de la tabla es una clave compuesta de la ID del módulo y la ID del ciclo*/
-  UNIQUE KEY `id_modulo_UNIQUE` (`id_modulo`), /*Crea una clave única en la columna de la ID para asegurarse de que cada fila tenga un valor diferente*/
   KEY `fk_modulo_ciclo1_idx` (`ciclo_id_ciclo`), /*Índice que optimiza las consultas de los módulos asignados a un ciclo*/
   CONSTRAINT `fk_modulo_ciclo1` FOREIGN KEY (`ciclo_id_ciclo`) REFERENCES `ciclo` (`id_ciclo`) /*Restricción a la ID del ciclo que se asegura de que la ID presente en la tabla de módulo también está presente en la tabla de ciclo.*/
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
