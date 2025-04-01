@@ -1,5 +1,7 @@
 const { DataTypes } = require("sequelize");
 const { sequelize } = require("../config/db");
+const Usuario = require("./Usuario");
+const Grupo = require("./Grupo");
 
 const UsuarioHasGrupo = sequelize.define("UsuarioHasGrupo", {
   usuario_id_usuario: { 

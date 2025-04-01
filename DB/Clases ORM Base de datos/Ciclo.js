@@ -1,5 +1,7 @@
 const { DataTypes } = require("sequelize");
 const { sequelize } = require("../config/db");
+const Modulo = require("./Modulo");
+const Grupo = require("./Grupo");
 
 const Ciclo = sequelize.define("Ciclo", {
   id_ciclo: { 

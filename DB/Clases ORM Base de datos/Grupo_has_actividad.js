@@ -1,5 +1,7 @@
 const { DataTypes } = require("sequelize");
 const { sequelize } = require("../config/db");
+const Grupo = require("./Grupo");
+const Actividad = require("./Actividad");
 
 const GrupoHasActividad = sequelize.define("GrupoHasActividad", {
   grupo_id_grupo: { 

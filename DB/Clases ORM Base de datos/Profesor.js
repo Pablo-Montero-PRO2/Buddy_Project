@@ -1,5 +1,9 @@
 const { DataTypes } = require("sequelize");
 const { sequelize } = require("../config/db");
+const Usuario = require("./Usuario");
+const Actividad = require("./Actividad");
+const Tutoria = require("./Tutoria");
+const Mensajeria = require("./Mensajeria");
 
 const Profesor = sequelize.define("Profesor", {
   usuario_id_usuario: { 

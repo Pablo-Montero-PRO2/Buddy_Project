@@ -1,5 +1,6 @@
 const { DataTypes } = require("sequelize");
 const { sequelize } = require("../config/db");
+const Actividad = require("./Actividad");
 
 const RecursoActividad = sequelize.define("RecursoActividad", {
   id_recurso: { 

@@ -1,5 +1,10 @@
 const { DataTypes } = require("sequelize");
 const { sequelize } = require("../config/db");
+const Usuario = require("./Usuario");
+const Actividad = require("./Actividad");
+const UsuarioHasGrupo = require("./UsuarioHasGrupo");
+const GrupoHasActividad = require("./GrupoHasActividad");
+const Ciclo = require("./Ciclo");
 
 const Grupo = sequelize.define("Grupo", {
   id_grupo: { 
@@ -43,5 +48,11 @@ Grupo.belongsToMany(Actividad, {
   through: GrupoHasActividad,
   foreignKey: "grupo_id_grupo",
 });
+// Nueva relación: Grupo pertenece a Ciclo
+Grupo.belongsTo(Ciclo, {
+  foreignKey: "ciclo_id_ciclo",
+  as: "ciclo",
+});
+
 
 module.exports = Grupo;
