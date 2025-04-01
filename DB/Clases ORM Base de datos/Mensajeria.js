@@ -6,6 +6,7 @@ const Mensajeria = sequelize.define("Mensajeria", {
     type: DataTypes.INTEGER,
     primaryKey: true, 
     allowNull: false,
+    autoIncrement: true
   },
   Profesor_usuario_id_usuario: {
     type: DataTypes.INTEGER,
@@ -34,9 +35,18 @@ const Mensajeria = sequelize.define("Mensajeria", {
       allowNull: false 
 
   },
+  createdAt: {
+    type: DataTypes.DATE,
+    allowNull: true,
+  },
+  updatedAt: {
+    type: DataTypes.DATE,
+    allowNull: true,
+  },
 }, {
   timestamps: true, // Sequelize manejará createdAt y updatedAt automáticamente
   underscored: true, // Convierte createdAt → created_at, updatedAt → updated_at en MySQL
 });
-
+Mensajeria.belongsTo(Profesor, { foreignKey: "Profesor_usuario_id_usuario", as: "profesor" });
+Mensajeria.belongsTo(Alumno, { foreignKey: "Alumno_usuario_id_usuario", as: "alumno" });
 module.exports = Mensajeria;

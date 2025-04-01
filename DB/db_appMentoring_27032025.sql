@@ -208,7 +208,7 @@ CREATE TABLE `mensajeria` (
   `fecha_hora_mensaje` timestamp NOT NULL,
   `asunto_mensaje` varchar(45) DEFAULT NULL,
   `desc_mensaje` varchar(500) NOT NULL,
-  `est_mensaje` tinyint NOT NULL,
+  `est_mensaje` tinyint NOT NULL, -- 1: leído, 0: no leído.
   `createdAt` timestamp NULL DEFAULT NULL,
   `updatedAt` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id_mensaje`,`Profesor_usuario_id_usuario`,`Alumno_usuario_id_usuario`),
@@ -267,7 +267,7 @@ DROP TABLE IF EXISTS `profesor`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `profesor` (
   `usuario_id_usuario` int NOT NULL,
-  `es_tutor` tinyint NOT NULL,
+  `es_tutor` tinyint NOT NULL,  -- 1: es tutor, 0: no es tutor
   `createdAt` timestamp NULL DEFAULT NULL,
   `updatedAt` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`usuario_id_usuario`),
@@ -359,7 +359,7 @@ DROP TABLE IF EXISTS `usuario`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `usuario` (
   `id_usuario` int NOT NULL AUTO_INCREMENT,
-  `est_usuario` tinyint NOT NULL,
+  `est_usuario` tinyint NOT NULL, -- 1: activo, 0: inactivo
   `nombre` varchar(45) NOT NULL,
   `apellidos` varchar(45) NOT NULL,
   `user` varchar(45) NOT NULL,

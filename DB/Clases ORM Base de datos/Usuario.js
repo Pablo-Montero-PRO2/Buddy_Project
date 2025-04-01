@@ -16,9 +16,13 @@ const Usuario = sequelize.define("Usuario", {
     type: DataTypes.STRING(45), 
     allowNull: false 
   },
-  apellidos: { 
+  ape1: { 
     type: DataTypes.STRING(45), 
     allowNull: false 
+  },
+  ape2: { 
+    type: DataTypes.STRING(45), 
+    allowNull: true  //Puede ser nulo
   },
   user: { 
     type: DataTypes.STRING(45), 
@@ -37,8 +41,16 @@ const Usuario = sequelize.define("Usuario", {
     allowNull: false 
   },
   foto: { 
-    type: DataTypes.STRING(45), 
+    type: DataTypes.STRING(500), 
     allowNull: false 
+  },
+  createdAt: {
+    type: DataTypes.DATE,
+    allowNull: false,
+  },
+  updatedAt: {
+    type: DataTypes.DATE,
+    allowNull: true,
   },
 },
 {
@@ -46,5 +58,19 @@ const Usuario = sequelize.define("Usuario", {
   underscored: true, // ✅ Convierte createdAt → created_at, updatedAt → updated_at en MySQL
   tableName: 'usuario'
 });
+
+Usuario.hasOne(Alumno, { foreignKey: "usuario_id_usuario", as: "alumno" });
+Usuario.hasOne(Profesor, { foreignKey: "usuario_id_usuario", as: "profesor" });
+
+Usuario.belongsToMany(Grupo, {
+  through: UsuarioHasGrupo,
+  foreignKey: "usuario_id_usuario",
+});
+
+Usuario.hasMany(Mensajeria, { foreignKey: "Alumno_usuario_id_usuario", as: "mensajesRecibidos" });
+Usuario.hasMany(Mensajeria, { foreignKey: "Profesor_usuario_id_usuario", as: "mensajesEnviados" });
+Usuario.hasMany(Tutoria, { foreignKey: "Alumno_usuario_id_usuario", as: "tutoriasRecibidas" });
+Usuario.hasMany(Tutoria, { foreignKey: "Profesor_usuario_id_usuario", as: "tutoriasImpartidas" });
+;
 
 module.exports = Usuario;

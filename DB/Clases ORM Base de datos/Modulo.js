@@ -13,13 +13,24 @@ const Modulo = sequelize.define("Modulo", {
     allowNull: false 
   },
   nom_modulo: {
-    type: DataTypes.STRING(45),
+    type: DataTypes.STRING(255),
     allowNull: false 
   },
-  
+  createdAt: {
+    type: DataTypes.DATE,
+    allowNull: false,
+  },
+  updatedAt: {
+    type: DataTypes.DATE,
+    allowNull: true,
+  },
 }, {
   timestamps: true, // Sequelize manejará createdAt y updatedAt automáticamente
   underscored: true, // Convierte createdAt → created_at, updatedAt → updated_at en MySQL
 });
 
+Modulo.belongsTo(Ciclo, { 
+  foreignKey: "ciclo_id_ciclo", 
+  as: "ciclo" 
+});
 module.exports = Modulo;
