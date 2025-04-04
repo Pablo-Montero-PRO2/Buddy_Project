@@ -1,3 +1,4 @@
+//import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -7,14 +8,14 @@ import { MatInputModule } from '@angular/material/input';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { AuthService } from '../../services/auth.service'; // ✅ Importamos el servicio
-
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-login',
   standalone: true,
   imports: [
     CommonModule,
+    // BrowserAnimationsModule,
     MatFormFieldModule,
     MatInputModule,
     MatCardModule,
@@ -25,15 +26,14 @@ import { AuthService } from '../../services/auth.service'; // ✅ Importamos el 
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
-
 export class LoginComponent {
   loginForm: FormGroup;
   errorMessage: string = '';
 
   constructor(
     private fb: FormBuilder,
-    private router: Router,
-    private authService: AuthService // ✅ Inyectamos el servicio
+    private authService: AuthService,
+    private router: Router
   ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -44,7 +44,7 @@ export class LoginComponent {
 
   onLogin() {
     if (this.loginForm.invalid) {
-      console.error("Formulario no válido");
+      console.error("El formulario no es válido");
       return;
     }
 
@@ -52,14 +52,21 @@ export class LoginComponent {
 
     this.authService.login(email, password).subscribe({
       next: (response) => {
-        console.log("✅ Login exitoso:", response);
+        console.log("Login exitoso:", response);
         localStorage.setItem('token', response.token);
+        localStorage.setItem('user', JSON.stringify(response.user));
         this.router.navigate(['/inicio']);
       },
       error: (err) => {
-        console.error("❌ Error en login:", err);
-        this.errorMessage = err.error?.msg || 'Error en el inicio de sesión';
-      }
+        console.error("Error en el login:", err);
+        if (err.status === 404) {
+          this.errorMessage = 'Este correo no está registrado.';
+        } else if (err.status === 400) {
+          this.errorMessage = 'Credenciales incorrectas.';
+        } else {
+          this.errorMessage = 'Error en el inicio de sesión.';
+        }
+      },
     });
   }
 }

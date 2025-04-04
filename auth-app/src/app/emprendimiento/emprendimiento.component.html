@@ -1,44 +1,56 @@
-<div class="container">
-    <h2>Emprendimiento</h2>
-  
-    <button (click)="mostrarEmprendimiento()">Nueva actividad</button>
-  
-    <div id="mensaje" class="mensaje-container" style="display: none;">
-        <h3>{{ actividadEditada ? 'Editar actividad' : 'Enviar Mensaje' }}</h3>
-        <form (submit)="enviarEmprendimiento($event)">
-            <label for="titulo">Título:</label>
-            <input type="text" id="titulo" required />
-   
-            <label for="descripcion">Descripción:</label>
-            <textarea id="descripcion" required></textarea>
-  
-            <label for="estado">Estado</label>
-            <select id="estado">
-                <option value="Sin publicar">Sin publicar</option>
-                <option value="Publicado">Publicado</option>
-            </select>
-  
-            <!-- URL inicial -->
-            <div *ngFor="let url of urls; let i = index">
-                <label for="url{{i}}">URL {{i + 1}}:</label>
-                <input type="text" [id]="'url' + i" [value]="url.url" (input)="onUrlChange(i, $event)" placeholder="Ingresa una URL" />
+<div class="container mt-4">
 
-                <label for="descripcion{{i}}">Descripción:</label>
-                <input type="text" [id]="'descripcion' + i" [value]="url.descripcion" (input)="onDescripcionChange(i, $event)" placeholder="Ingresa una descripción" />
-  
-                <button type="button" (click)="eliminarUrl(i)">Eliminar URL</button>
-            </div>
-  
-            <!-- Botón para agregar más campos de URL -->
-            <button type="button" (click)="agregarUrl()">Agregar otra URL</button>
-            <button type="submit">{{ actividadEditada ? 'Actualizar' : 'Enviar' }}</button>
-            <button type="button" (click)="cerrarEmprendimiento()">Cerrar</button>
-        </form>
-    </div>
-  
-    <div id="listaMensajes">
-        <section id="listaMensajes">
-            <!-- Aquí se mostrarán los mensajes -->
-        </section>
+  <header class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="h3">Emprendimiento</h1>
+    <button *ngIf="esProfesor" (click)="abrirActividad()" class="btn btn-warning">Nueva actividad</button>
+  </header>
+ 
+  <!-- Formulario de creación/edición de actividad -->
+  <div *ngIf="esProfesor" id="actividad" class="card p-4 shadow-sm" hidden>
+    <form (ngSubmit)="guardarActividad()" #formActividad="ngForm">
+
+      <div class="mb-3">
+        <label for="tipo" class="form-label">Tipo de actividad:</label>
+        <input type="text" id="tipo" name="tipo" class="form-control" required [(ngModel)]="nuevaActividad.tipo">
+      </div>
+
+      <div class="mb-3">
+        <label for="descripcion" class="form-label">Descripción:</label>
+        <textarea id="descripcion" name="descripcion" class="form-control" required [(ngModel)]="nuevaActividad.descripcion"></textarea>
+      </div>
+
+      <div class="d-flex justify-content-between">
+        <button type="submit" class="btn btn-success">
+          {{ modoEdicion ? 'Actualizar actividad' : 'Guardar actividad' }}
+        </button>
+
+        <button type="button" class="btn btn-outline-danger" (click)="cerrarActividad()">
+          Cancelar
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Sección de actividades -->
+  <h3 class="mt-4">Lista de actividades</h3>
+
+  <div *ngIf="actividades.length === 0" class="alert alert-info mt-3">
+    No hay actividades creadas aún.
+  </div>
+
+  <div *ngFor="let actividad of actividades" class="card mb-3 shadow-sm">
+    <div class="card-body">
+      <h5 class="card-title">{{ actividad.tipo }}</h5>
+      <p class="card-text">{{ actividad.descripcion }}</p>
+
+      <p class="text-muted"><small>Estado: {{ actividad.estado }}</small></p>
+
+      <!-- Botones solo si es profesor -->
+      <div *ngIf="esProfesor" class="d-flex">
+        <button class="btn btn-warning me-2" (click)="editarActividad(actividad.id)">Editar</button>
+        <button class="btn btn-outline-danger" (click)="eliminarActividad(actividad.id)">Eliminar</button>
+      </div>
     </div>
   </div>
+
+</div>

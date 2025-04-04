@@ -1,22 +1,54 @@
-import { Component } from '@angular/core';
-import { RouterModule } from '@angular/router'; // Asegúrate de importar RouterModule
-import { Router } from '@angular/router';  // Importar Router para redirigir
+import { Component, OnInit } from '@angular/core';
+import { RouterModule, Router, NavigationEnd } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { MensajesNoLeidosService } from '../../services/mensajes-no-leidos.service';
+
 @Component({
   selector: 'app-menu-lateral',
   standalone: true,
-  imports: [RouterModule], // Incluir RouterModule en imports
+  imports: [CommonModule, RouterModule],
   templateUrl: './menu-lateral.component.html',
   styleUrls: ['./menu-lateral.component.css']
 })
-export class MenuLateralComponent {
-  // Aquí va la lógica de tu componente si es necesario
-  constructor(private router: Router) { }
+export class MenuLateralComponent implements OnInit {
+
+  cantidadMensajes: number = 0;
+  cantidadTutorias: number = 0;
+
+  constructor(
+    private router: Router,
+    private mensajesNoLeidosService: MensajesNoLeidosService
+  ) {}
+
+  ngOnInit() {
+    this.actualizarContadores();
+
+    // ✅ Detectar navegación y actualizar los contadores (mensajes + tutorías)
+    this.router.events.subscribe(event => {
+      if (event instanceof NavigationEnd) {
+        this.actualizarContadores();
+      }
+    });
+  }
+
+  actualizarContadores(): void {
+    this.mensajesNoLeidosService.getMensajesNoLeidos().subscribe({
+      next: (response) => {
+        this.cantidadMensajes = response['cantidadMensajesNoLeidos'];
+      },
+      error: (err) => {
+        console.error('Error al obtener mensajes no leídos:', err);
+      }
+    });
+
+    const tutoriasNoLeidas = localStorage.getItem('tutoriasNoLeidas');
+    this.cantidadTutorias = tutoriasNoLeidas ? parseInt(tutoriasNoLeidas, 10) : 0;
+  }
 
   logout() {
-    // Eliminar el token de autenticación (si lo estás usando)
-    localStorage.removeItem('token'); // Aquí eliminamos el token de localStorage
-
-    // Redirigir al usuario a la página de login
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    localStorage.removeItem('tutoriasNoLeidas');
     this.router.navigate(['/login']);
-}
+  }
 }

@@ -1,24 +1,60 @@
-<h2 class="mt-4">Actividades</h2>
+<div class="container mt-4">
 
-<div *ngFor="let act of actividades" class="actividad bg-light p-3 rounded shadow-sm w-100 mt-3">
-  <h3 class="mb-1">{{ act.tipo }}: {{ act.descripcion }}</h3>
-  <p class="text-start">
-    <sub>{{ act.estado === 'En proceso' ? 'Pendiente' : 'Completada' }}</sub>
-  </p>
+  <!-- Cabecera con rol y nombre -->
+  <h2 class="mb-3">
+    {{ esProfesor ? 'Profesor' : 'Alumno' }}: {{ userNombreApe }}
+  </h2>
 
-  <!-- Botón principal -->
-  <button (click)="irActividad(act.id)" class="btn btn-warning me-2">
-    {{ act.estado === 'En proceso' ? 'Continuar' : 'Volver a realizar' }}
-  </button>
+  <h4>Actividades</h4>
 
-  <!-- Botones de prueba con estilo discreto -->
-  <button class="btn btn-outline-secondary me-2" (click)="actualizarEstado(act.id, 'Finalizada')">
-    Marcar como Finalizada
-  </button>
+  <!-- Si no hay actividades -->
+  <div *ngIf="actividades.length === 0" class="alert alert-info mt-3">
+    No hay actividades disponibles.
+  </div>
 
-  <button class="btn btn-outline-secondary" (click)="actualizarEstado(act.id, 'En proceso')">
-    Marcar como En proceso
-  </button>
+  <!-- Listado de actividades -->
+  <div *ngFor="let act of actividades" class="card mb-3 shadow-sm">
+    <div class="card-body">
+
+      <h5 class="card-title">{{ act.tipo || 'Actividad' }}</h5>
+      <p class="card-text">{{ act.descripcion || 'Sin descripción' }}</p>
+
+      <!-- Estado visible -->
+      <p class="text-muted">
+        <small>
+          {{ esProfesor 
+            ? (act.estado === 'Creada' ? 'Creada' : 'No creada') 
+            : (act.estado === 'En proceso' ? 'Pendiente' : 'Completada') 
+          }}
+        </small>
+      </p>
+
+      <!-- Botón del profesor -->
+      <div *ngIf="esProfesor">
+        <button class="btn btn-secondary" disabled>
+          {{ act.estado === 'Creada' ? 'Creada' : 'No creada' }}
+        </button>
+      </div>
+
+      <!-- Botones para alumno -->
+      <div *ngIf="!esProfesor">
+        <!-- Botón "Finalizar" si está en proceso -->
+        <button 
+          *ngIf="act.estado === 'En proceso'" 
+          class="btn btn-outline-success me-2" 
+          (click)="actualizarEstado(act.id, 'Finalizada')">
+          Finalizar
+        </button>
+
+        <!-- Botón "Continuar" si está finalizada -->
+        <button 
+          *ngIf="act.estado === 'Finalizada'" 
+          class="btn btn-outline-primary" 
+          (click)="actualizarEstado(act.id, 'En proceso')">
+          Continuar
+        </button>
+      </div>
+    </div>
+  </div>
+
 </div>
-
-

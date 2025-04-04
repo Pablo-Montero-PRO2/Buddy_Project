@@ -1,13 +1,24 @@
-import { Component } from '@angular/core';
-import { RouterModule } from '@angular/router'; // Importar RouterModule aquí
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { MenuLateralComponent } from './menu-lateral.component';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { RouterTestingModule } from '@angular/router/testing';
 
-@Component({
-  selector: 'app-menu-lateral',
-  standalone: true,
-  imports: [RouterModule], // Incluir RouterModule en imports
-  templateUrl: './menu-lateral.component.html',
-  styleUrls: ['./menu-lateral.component.css']
-})
-export class MenuLateralComponent {
-  // Aquí va la lógica del componente si es necesario
-}
+describe('MenuLateralComponent', () => {
+  let component: MenuLateralComponent;
+  let fixture: ComponentFixture<MenuLateralComponent>;
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [MenuLateralComponent, HttpClientTestingModule, RouterTestingModule]
+    }).compileComponents();
+
+    fixture = TestBed.createComponent(MenuLateralComponent);
+    component = fixture.componentInstance;
+    component.cantidadMensajes = 0; // 👈 Esto evita el error
+    fixture.detectChanges();
+  });
+
+  it('debería crearse correctamente', () => {
+    expect(component).toBeTruthy();
+  });
+});

@@ -1,22 +1,43 @@
-<!-- Contenido principal -->
-<div class="content flex-grow-1 p-4">
-    <h1 class="fw-bold mb-4 h3">Perfil del usuario</h1>
-    <div class="card p-4 bg-light border-0">
-        <div class="mb-3">
-            <p class="fw-bold mb-1">Nombre:</p>
-            <p class="mb-0">Juan Ramírez Benítez</p>
+<div class="container mt-4">
+ 
+  <!-- Título -->
+  <h2 class="mb-3">Perfil</h2>
+ 
+  <!-- Perfil de usuario -->
+  <div *ngIf="usuario" class="card shadow-sm p-4">
+    <div class="card-body">
+     
+      <div class="row mb-3">
+        <div class="col-md-4 fw-bold">Nombre:</div>
+        <div class="col-md-8">{{ usuario.name }} {{ usuario.apellidos }}</div>
+      </div>
+ 
+      <div class="row mb-3">
+        <div class="col-md-4 fw-bold">Correo:</div>
+        <div class="col-md-8">{{ usuario.email }}</div>
+      </div>
+ 
+      <div class="row mb-3">
+        <div class="col-md-4 fw-bold">Teléfono:</div>
+        <div class="col-md-8">{{ usuario.telefono || 'No disponible' }}</div>
+      </div>
+ 
+      <!-- Rol con Bootstrap y estilos personalizados -->
+      <div class="row mb-3 align-items-center">
+        <div class="col-md-4 fw-bold">Rol:</div>
+        <div class="col-md-8">
+          <span class="badge text-white px-4 py-2 fs-5 rounded shadow" style="background-color: #e0c52b;">
+            {{ usuario.rol | titlecase }}
+          </span>
         </div>
-        <div class="mb-3">
-            <p class="fw-bold mb-1">Correo electrónico:</p>
-            <p class="mb-0">juan.ramirezapro2fp.es</p>
-        </div>
-        <div class="mb-3">
-            <p class="fw-bold mb-1">Teléfono:</p>
-            <p class="mb-0">+34 600 123 456</p>
-        </div>
-        <div class="mb-3">
-            <p class="fw-bold mb-1">Rol:</p>
-            <p class="mb-0">Profesor</p>
-        </div>
+      </div>
+ 
     </div>
+  </div>
+ 
+  <!-- Mensaje si no hay usuario -->
+  <div *ngIf="!usuario || !usuario.name" class="alert alert-warning mt-3">
+    No se ha encontrado ningún usuario activo.
+  </div>
+ 
 </div>

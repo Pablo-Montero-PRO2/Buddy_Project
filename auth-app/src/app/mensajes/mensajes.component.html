@@ -1,26 +1,49 @@
 <!-- Contenido principal -->
-<div class="content flex-grow-1 p-4">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h1 class="h3">Mensajes</h1>
-        <button (click)="abrirMensaje()" class="btn btn-warning">Nuevo mensaje</button>
-    </div>
-
-    <!-- Ventana para escribir mensaje -->
-    <!-- Ventana para escribir mensaje -->
-<div *ngIf="mensajeAbierto" class="position-fixed top-50 start-50 translate-middle bg-white p-4 rounded shadow w-50">
+<div class="container-fluid p-4">
+    <main>
+      <!-- Encabezado -->
+      <header class="d-flex justify-content-between align-items-center mb-3">
+        <h1 class="h3">Mensajería</h1>
+        <button class="btn btn-warning" (click)="abrirMensaje()">Nuevo mensaje</button>
+      </header>
+ 
+      <!-- Ventana para escribir mensaje (modal estilo) -->
+      <div id="mensaje" *ngIf="mensajeAbierto" class="position-fixed top-50 start-50 translate-middle bg-white p-4 rounded shadow w-50 z-3">
         <form [formGroup]="mensajeForm" (ngSubmit)="enviarMensaje()" method="post">
-            <div class="d-flex justify-content-between align-items-center">
-                <h3>Nuevo mensaje</h3>
-                <span (click)="cerrarMensaje()" class="text-danger fw-bold" style="cursor: pointer;">[X]</span>
-            </div>
-            <input id="email" formControlName="email" type="email" autocomplete="email" placeholder="Para..." required class="form-control my-2">
-            <input id="asunto" formControlName="asunto" type="text" placeholder="Asunto" class="form-control my-2">
-            <textarea id="contenido" formControlName="contenido" placeholder="Escribe tu mensaje aquí..." rows="5" class="form-control my-2"></textarea>
-            <button type="submit" class="btn btn-warning w-100">Enviar</button>
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h3 class="mb-0">Nuevo mensaje</h3>
+            <span (click)="cerrarMensaje()" class="text-danger fw-bold" style="cursor: pointer;">[X]</span>
+          </div>
+ 
+          <div class="mb-3">
+            <input id="email" formControlName="email" type="email" class="form-control"
+                   placeholder="Para..." pattern="^[a-zA-Z0-9._%+-]+@pro2fp\\.es$" required autocomplete="email">
+          </div>
+ 
+          <div class="mb-3">
+            <input id="asunto" formControlName="asunto" type="text" class="form-control" placeholder="Asunto">
+          </div>
+ 
+          <div class="mb-3">
+            <textarea id="contenido" formControlName="contenido" class="form-control" placeholder="Escribe tu mensaje aquí..." rows="5"></textarea>
+          </div>
+ 
+          <button type="submit" class="btn btn-warning w-100">Enviar</button>
         </form>
-    </div>
-
-    <!-- Lista de mensajes -->
-    <div class="listaMensajes">
-    </div>
-</div>
+      </div>
+ 
+      <!-- Lista de mensajes -->
+      <section id="listaMensajes" class="mt-4">
+        <div *ngFor="let mensaje of mensajes; let i = index" class="card mb-3 shadow-sm">
+          <div class="card-body">
+            <h5 class="card-title">Alumno: {{ emails[mensaje.Alumno_usuario_id_usuario] }}</h5>
+            <p class="card-text">{{ mensaje.desc_mensaje }}</p>
+            <small class="text-muted">{{ mensaje.fecha_hora_mensaje | date: 'dd/MM/yyyy HH:mm:ss' }}</small>
+            <div class="mt-3">
+              <button class="btn btn-outline-danger btn-sm" (click)="eliminarMensaje(i)">Eliminar</button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>

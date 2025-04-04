@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ActividadService } from '../actividad.service';
+import { ActividadService } from '../services/actividad.service';
 
 @Component({
   selector: 'app-actividad',
@@ -10,8 +10,8 @@ import { ActividadService } from '../actividad.service';
 export class ActividadComponent implements OnInit {
   textoBoton: string = 'Cargando...';
   estadoActividad: string = '';
-  alumnoId: number = 100;
-  actividadId: number = 301; // 300 volver a realizar y 301 continuar
+  alumnoId: number = 11;
+  actividadId: number = 1; // 300 volver a realizar y 301 continuar
 
   constructor(
     private actividadService: ActividadService,
@@ -29,7 +29,7 @@ export class ActividadComponent implements OnInit {
   obtenerEstado(): void {
     this.actividadService.obtenerEstadoActividad(this.alumnoId, this.actividadId)
       .subscribe({
-        next: (respuesta) => {
+        next: (respuesta: any) => {
           this.estadoActividad = respuesta.estado;
 
           if (this.estadoActividad === 'En proceso') {
@@ -40,7 +40,7 @@ export class ActividadComponent implements OnInit {
             this.textoBoton = 'Iniciar actividad';
           }
         },
-        error: (error) => {
+        error: (error: any) => {
           console.error('Error al consultar la actividad', error);
           this.textoBoton = 'Error al cargar';
         }

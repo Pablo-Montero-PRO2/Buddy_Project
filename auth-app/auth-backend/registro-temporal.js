@@ -11,3 +11,4 @@ axios.post('http://localhost:5000/api/auth/register', {
 .catch(error => {
   console.error("❌ Error al registrar:", error.response.data);
 });
+

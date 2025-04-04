@@ -1,15 +1,23 @@
-const { DataTypes, Sequelize } = require("sequelize");
+const { DataTypes } = require("sequelize");
 const { sequelize } = require("../config/db");
+const Usuario = require("./Usuario");
 
 const Alumno = sequelize.define("Alumno", {
-  usuario_id_usuario: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true,  },
-  fecha_insercion: {type: Sequelize.DATE, field: 'created_at', allowNull: false},
-  fecha_modificacion: {type: Sequelize.DATE, field: 'updated_at', allowNull: false },
-  fecha_borrado: {type: Sequelize.DATE, field: 'deleted_at', allowNull: true },
+  usuario_id_usuario: { 
+    type: DataTypes.INTEGER, 
+    primaryKey: true, 
+    allowNull: false 
+  },
 },
-  {
-    timestamps: true, // ✅ Sequelize manejará createdAt y updatedAt automáticamente
-    underscored: true, // ✅ Convierte createdAt → created_at, updatedAt → updated_at en MySQL
-  });
+{
+  timestamps: false, // ✅ No agregará createdAt y updatedAt automáticamente
+  tableName: "Alumno", // ✅ Asegura que el nombre de la tabla sea exactamente "Alumno"
+  underscored: true,  // ✅ Convierte nombres de columnas a snake_case en la base de datos
+});
+
+Alumno.belongsTo(Usuario, {
+  foreignKey: 'usuario_id_usuario',
+  targetKey: 'id_usuario'
+})
 
 module.exports = Alumno;

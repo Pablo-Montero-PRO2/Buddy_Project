@@ -120,10 +120,3 @@ p {
 .text-muted {
     font-size: 12px;
 }
-
-.navbar-brand img {
-    display: block !important;
-    width: auto;
-    max-width: 100px;
-    height: auto;
-  }

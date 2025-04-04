@@ -1,159 +1,121 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
-interface UrlObject {
-  url: string;
-  descripcion: string;
-}
+import { FormsModule } from '@angular/forms';
+import { ActividadService } from './../services/actividad.service';
 
 @Component({
   selector: 'app-emprendimiento',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './emprendimiento.component.html',
-  styleUrl: './emprendimiento.component.css'
+  styleUrls: ['./emprendimiento.component.css']
 })
-export class EmprendimientoComponent {
-  actividadesAlumno: any[] = [];
-  urls: UrlObject[] = [{ url: '', descripcion: '' }];
-  actividadEditada: any = null; // Para guardar la actividad seleccionada para edición
+export class EmprendimientoComponent implements OnInit {
+  actividades: any[] = [];
+  profesorId: number = 10;
+  usuarioId: number = 0;
+  esProfesor: boolean = false;
+
+  nuevaActividad = {
+    tipo: '',
+    descripcion: ''
+  };
+
+  modoEdicion: boolean = false;
+  actividadEditandoId: number | null = null;
+
+  constructor(private actividadService: ActividadService) {}
 
   ngOnInit(): void {
-    (window as any).abrirMensaje = this.mostrarEmprendimiento.bind(this);
-    (window as any).cerrarMensaje = this.cerrarEmprendimiento.bind(this);
-    (window as any).enviarMensaje = this.enviarEmprendimiento.bind(this);
-    (window as any).eliminarMensaje = this.eliminarEmprendimiento.bind(this);
-    (window as any).editarMensaje = this.editarEmprendimiento.bind(this);
-  }
-  mostrarEmprendimiento() {
-    const mensajeDiv = document.getElementById('mensaje');
-    if (mensajeDiv) mensajeDiv.style.display = 'block';
-  }
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    this.usuarioId = user.id;
+    this.esProfesor = user.rol === 'profesor';
 
-  cerrarEmprendimiento() {
-    const mensajeDiv = document.getElementById('mensaje');
-    if (mensajeDiv) mensajeDiv.style.display = 'none';
-  }
-
-  enviarEmprendimiento(event: Event) {
-    event.preventDefault();
-    const titulo = (document.getElementById('titulo') as HTMLInputElement).value;
-    const descripcion = (document.getElementById('descripcion') as HTMLTextAreaElement).value;
-    const estado = (document.getElementById('estado') as HTMLSelectElement).value;
-
-    if (!titulo || !descripcion || !estado || this.urls.length === 0) {
-      alert('Por favor, completa todos los campos y añade al menos una URL');
-      return;
+    if (this.esProfesor) {
+      this.obtenerActividadesDelProfesor();
+    } else {
+      this.obtenerActividadesDelAlumno();
     }
+  }
 
-    const hora_actual = new Date();
-    const fechaHoraFormateada = hora_actual.toLocaleDateString('es-ES', {
-      year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit'
+  obtenerActividadesDelProfesor(): void {
+    this.actividadService.obtenerActividadesDeProfesor(this.usuarioId).subscribe({
+      next: (data) => this.actividades = data,
+      error: (err) => console.error('Error al obtener actividades del profesor:', err)
     });
+  }
 
-    const nuevoMensaje = {
-      titulo,
-      descripcion,
-      estado,
-      fecha: fechaHoraFormateada,
-      publicado: false,
-      urls: this.urls // Guardamos las URLs con sus descripciones
+  obtenerActividadesDelAlumno(): void {
+    this.actividadService.obtenerActividadesDeAlumno(this.usuarioId).subscribe({
+      next: (data) => this.actividades = data,
+      error: (err) => console.error('Error al obtener actividades del alumno:', err)
+    });
+  }
+
+  guardarActividad(): void {
+    const actividad = {
+      tipo_act: this.nuevaActividad.tipo,
+      desc_act: this.nuevaActividad.descripcion,
+      est_act_prof: 'No creada',
+      Profesor_usuario_id_usuario: this.usuarioId
     };
 
-    if (this.actividadEditada) {
-      // Si estamos editando, actualizamos la actividad
-      this.actividadesAlumno[this.actividadEditada.index] = nuevoMensaje;
-      this.actividadEditada = null; // Limpiamos la actividad editada
+    if (this.modoEdicion && this.actividadEditandoId !== null) {
+      this.actividadService.editarActividad(this.actividadEditandoId, actividad).subscribe({
+        next: () => {
+          this.obtenerActividadesDelProfesor();
+          this.cancelarEdicion();
+        },
+        error: (err) => console.error('Error al editar actividad:', err)
+      });
     } else {
-      // Si es una nueva actividad, la agregamos al array
-      this.actividadesAlumno.push(nuevoMensaje);
-    }
-
-    this.actualizarActividades();
-    this.resetForm();
-    this.cerrarEmprendimiento();
-  }
-
-  eliminarEmprendimiento(index: number) {
-    if (confirm('¿Estás seguro de que deseas eliminar la actividad?')) {
-      this.actividadesAlumno.splice(index, 1);
-      this.actualizarActividades();
-    }
-  }
-
-  publicarEmprendimiento(index: number) {
-    this.actividadesAlumno[index].publicado = true;
-    this.actualizarActividades();
-  }
-
-  actualizarActividades() {
-    const listaMensajes = document.getElementById('listaMensajes');
-    if (listaMensajes) {
-      listaMensajes.innerHTML = '';
-      this.actividadesAlumno.forEach((mensaje, index) => {
-        const mensajeHTML = `
-          <article>
-            <h2>Título: ${mensaje.titulo}</h2>
-            <p>Descripción: ${mensaje.descripcion}</p>
-            <p>Estado: ${mensaje.estado}</p>
-            <p>URLs:</p>
-            <ul>
-              ${mensaje.urls.map((urlObj: UrlObject) => `<li>${urlObj.url} - ${urlObj.descripcion}</li>`).join('')}
-            </ul>
-            <span>${mensaje.fecha}</span>
-            <br>
-            <button onclick="eliminarMensaje(${index})">Eliminar</button>
-            <button onclick="editarMensaje(${index})">Editar</button>
-          </article>`;
-        listaMensajes.innerHTML = mensajeHTML + listaMensajes.innerHTML;
+      this.actividadService.crearActividad(actividad).subscribe({
+        next: () => {
+          this.obtenerActividadesDelProfesor();
+          this.nuevaActividad = { tipo: '', descripcion: '' };
+        },
+        error: (err) => console.error('Error al crear actividad:', err)
       });
     }
   }
 
-  // Función para manejar los cambios en las URLs
-  onUrlChange(index: number, event: Event) {
-    const input = event.target as HTMLInputElement;
-    if (input && input.value) {
-      this.urls[index].url = input.value; // Aseguramos que sea un string
+  editarActividad(id: number): void {
+    const form = document.getElementById("actividad");
+    if (form) form.hidden = false;
+
+    const actividad = this.actividades.find(a => a.id === id);
+    if (!actividad) return;
+
+    this.modoEdicion = true;
+    this.actividadEditandoId = id;
+    this.nuevaActividad = {
+      tipo: actividad.tipo,
+      descripcion: actividad.descripcion
+    };
+  }
+
+  cancelarEdicion(): void {
+    this.modoEdicion = false;
+    this.actividadEditandoId = null;
+    this.nuevaActividad = { tipo: '', descripcion: '' };
+  }
+
+  eliminarActividad(id: number): void {
+    if (confirm('¿Estás seguro de que quieres eliminar esta actividad?')) {
+      this.actividadService.eliminarActividad(id).subscribe({
+        next: () => this.obtenerActividadesDelProfesor(),
+        error: (err) => console.error('❌ Error al eliminar actividad:', err)
+      });
     }
   }
 
-  // Función para manejar los cambios en las descripciones
-  onDescripcionChange(index: number, event: Event) {
-    const input = event.target as HTMLInputElement;
-    if (input && input.value) {
-      this.urls[index].descripcion = input.value; // Aseguramos que sea una descripción válida
-    }
+  abrirActividad() {
+    const form = document.getElementById("actividad");
+    if (form) form.hidden = false;
   }
 
-
-  // Función para agregar un nuevo campo de URL y descripción
-  agregarUrl() {
-    this.urls.push({ url: '', descripcion: '' }); // Añadimos un objeto con url y descripción vacíos
-  }
-
-  // Función para eliminar una URL en una posición específica
-  eliminarUrl(index: number) {
-    this.urls.splice(index, 1); // Eliminamos la URL y su descripción de la posición indicada
-  }
-
-  // Función para editar una actividad
-  editarEmprendimiento(index: number) {
-    const actividad = this.actividadesAlumno[index];
-    this.actividadEditada = { index, actividad }; // Guardamos el índice de la actividad y la actividad
-    // Cargamos los datos en el formulario
-    (document.getElementById('titulo') as HTMLInputElement).value = actividad.titulo;
-    (document.getElementById('descripcion') as HTMLTextAreaElement).value = actividad.descripcion;
-    (document.getElementById('estado') as HTMLSelectElement).value = actividad.estado;
-    this.urls = actividad.urls; // Cargamos las URLs y descripciones
-    this.mostrarEmprendimiento(); // Mostramos el formulario para editar
-  }
- 
-  // Función para resetear el formulario
-  resetForm() {
-    (document.getElementById('titulo') as HTMLInputElement).value = '';
-    (document.getElementById('descripcion') as HTMLTextAreaElement).value = '';
-    (document.getElementById('estado') as HTMLSelectElement).value = '';
-    this.urls = [{ url: '', descripcion: '' }]; // Reseteamos las URLs
+  cerrarActividad() {
+    const form = document.getElementById("actividad");
+    if (form) form.hidden = true;
   }
 }

@@ -3,11 +3,17 @@ const express = require("express");
 const cors = require("cors");
 const { connectDB, sequelize } = require("./config/db");
 const authRoutes = require("./routes/authRoutes");
-const AlumnoActividad = require("./models/AlumnoActividad");
-const Actividad = require("./models/Actividad"); // 👈 importar modelo
+const internalRoutes = require("./routes/internalRoutes");
+const mensajeriaRoutes = require("./routes/mensajeriaRoutes");
+const actividadRoutes = require('./routes/actividadRoutes'); // Mover aquí
+const tutoriaRoutes = require('./routes/tutoriaRoutes');
+const AlumnoActividad = require("./models/Alumno_has_actividad");
+const Actividad = require("./models/Actividad");
+const  Mensajeria  = require("./models/Mensajeria");
 const { Op } = require("sequelize");
 
-const app = express();
+// Ahora declaras app
+const app = express(); // ✅ Aquí va primero
 app.use(cors());
 app.use(express.json());
 
@@ -16,8 +22,13 @@ app.get("/", (req, res) => {
   res.send("¡Bienvenido al servidor de la API!");
 });
 
-// 📌 Rutas de autenticación
+// 📌 Rutas de autenticación y mensajería
 app.use("/api/auth", authRoutes);
+app.use("/api/mensajeria", mensajeriaRoutes);
+app.use("/api/internal", internalRoutes); // 👈 AÑADIDO
+app.use('/api/tutorias', tutoriaRoutes);
+// 📌 Las rutas que usas para actividades
+app.use('/api/actividad', actividadRoutes); // ✅ Esta línea va después de `app`
 
 // 📌 Consulta estado de una actividad para un alumno
 app.get("/estadoActividad", async (req, res) => {
@@ -47,7 +58,40 @@ app.get("/estadoActividad", async (req, res) => {
   }
 });
 
-// 📌 NUEVO: Obtener actividades del alumno (en proceso y finalizadas)
+app.post('/api/mensajeria/enviarMensaje',async (req, res) => {
+  // Aquí iría la lógica de guardar el mensaje en la base de datos
+  console.log("Modelo Mensajeria:", Mensajeria);
+  try {
+    console.log("Solicitud recibida: ", req.body)
+    const mensaje = await Mensajeria.create({
+      Profesor_usuario_id_usuario: req.body.profesorId,  // 🔹 Convertimos los nombres
+      Alumno_usuario_id_usuario: req.body.alumnoId,
+      fecha_hora_mensaje: req.body.fechaHora, 
+      desc_mensaje: req.body.contenido,
+      asunto_mensaje: req.body.asunto || null, // El asunto no es obligatorio
+      est_mensaje: req.body.est_mesj || 0 // 🔹 Aseguramos que no sea undefined
+    });
+
+    console.log("Mensaje guardado:", mensaje);
+    res.status(200).json({ mensaje: "Mensaje enviado correctamente" });
+    res.json(mensaje)
+  } catch (error) {
+    console.error("Error en el backend:", error);
+    res.status(500).json({ error: "Error interno del servidor" });
+  }
+});
+app.get('/api/mensajeria/obtenerMensajes', async(req, res)=>{
+try {
+  // Obtener todos los mensajes
+  const mensajes = await Mensajeria.findAll();    
+  res.json({mensajes});
+} catch (error) {
+  console.error('Error al obtener los mensajes:', error);
+  res.status(500).json({ error: 'Error al obtener los mensajes' });
+}
+}),
+
+// 📌 Obtener actividades del alumno
 app.get("/api/actividades/alumno/:id", async (req, res) => {
   const alumnoId = parseInt(req.params.id);
 
@@ -69,8 +113,54 @@ app.get("/api/actividades/alumno/:id", async (req, res) => {
       ]
     });
 
-// 📌 NUEVO: Actualizar el estado de una actividad de un alumno
+    const resultado = actividades.map(act => ({
+      id: act.actividad_id_actividad,
+      tipo: act.actividad?.tipo_act || 'Desconocido',
+      descripcion: act.actividad?.desc_act || '',
+      estado: act.est_act_alu
+    }));
+
+    res.json(resultado);
+  } catch (error) {
+    console.error("❌ Error al obtener actividades del alumno:", error);
+    res.status(500).json({ error: "Error al consultar actividades" });
+  }
+});
+
+// 📌 Obtener actividades del profesor
+app.get("/api/actividades/profesor/:id", async (req, res) => {
+  const profesorId = parseInt(req.params.id);
+
+  try {
+    const actividades = await Actividad.findAll({
+      where: {
+        Profesor_usuario_id_usuario: profesorId,
+        est_act_prof: {
+          [Op.in]: ['Creada', 'No creada']
+        }
+      },
+      order: [
+        [sequelize.literal(`FIELD(est_act_prof, 'Creada', 'No creada')`)]
+      ]
+    });
+
+    const resultado = actividades.map(act => ({
+      id: act.id_actividad,
+      tipo: act.tipo_act || 'Desconocido',
+      descripcion: act.desc_act || '',
+      estado: act.est_act_prof
+    }));
+
+    res.json(resultado);
+  } catch (error) {
+    console.error("❌ Error al obtener actividades del profesor:", error);
+    res.status(500).json({ error: "Error al consultar actividades" });
+  }
+});
+
+// 📌 Actualizar estado de una actividad de un alumno
 app.put("/api/actividad/estado", async (req, res) => {
+  console.log("📥 Datos recibidos para actualizar estado:", req.body);
   const { alumnoId, actividadId, nuevoEstado } = req.body;
 
   if (!alumnoId || !actividadId || !nuevoEstado) {
@@ -100,24 +190,10 @@ app.put("/api/actividad/estado", async (req, res) => {
 });
 
 
-    const resultado = actividades.map(act => ({
-      id: act.actividad_id_actividad,
-      tipo: act.actividad?.tipo_act || 'Desconocido',
-      descripcion: act.actividad?.desc_act || '',
-      estado: act.est_act_alu
-    }));
-
-    res.json(resultado);
-  } catch (error) {
-    console.error("❌ Error al obtener actividades del alumno:", error);
-    res.status(500).json({ error: "Error al consultar actividades" });
-  }
-});
-
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, async () => {
   await connectDB();
-  await sequelize.sync(); // 🔹 Sincronizar modelos con MySQL
+  await sequelize.sync();
   console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`);
 });

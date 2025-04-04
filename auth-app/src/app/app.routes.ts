@@ -8,6 +8,8 @@ import { CompetenciasDigitalesComponent } from './competencias-digitales/compete
 import { TutoriasComponent } from './tutorias/tutorias.component'; 
 import { MensajesComponent } from './mensajes/mensajes.component'; 
 import { PerfilComponent } from './perfil/perfil.component'; 
+import { ActividadComponent } from './actividad/actividad.component'; 
+
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -20,6 +22,9 @@ export const routes: Routes = [
   { path: 'mensajes', component: MensajesComponent },
   { path: 'perfil', component: PerfilComponent },
   { path: 'logo', component: LoginComponent }, //nuevo
+  { path: 'actividad/:id', component: ActividadComponent },
+  { path: 'tutorias', component: TutoriasComponent },
+  { path: 'mensajeria', component: MensajesComponent },
   { path: '**', redirectTo: 'login' } // Default route
 ];
 
